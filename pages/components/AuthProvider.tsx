@@ -1,4 +1,6 @@
+// Next-Auth Provider
 "use client";
+
 import { SessionProvider } from "next-auth/react";
 
 interface Props {

@@ -8,14 +8,14 @@ import { IconBrandGoogle } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
 
 // Import Components
-import logo from "../../public/rolodex.jpg";
+import logo from "../../public/zaptoid.svg";
 
 type User = {
   name: string;
   email: string;
 } | null;
 
-// Main function
+// Export Module
 function Login() {
 
   return (
@@ -26,7 +26,7 @@ function Login() {
             <Image
               src={logo}
               id="logo"
-              alt="Next-Todo-Logo"
+              alt="logo"
               height={300}
               width={300}
             />
@@ -38,8 +38,8 @@ function Login() {
             color="dimmed"
             className="sign-in-text"
           >
-            Don't know who is who and just can't remember <b>THAT GUY</b> ? Use{" "}
-            <b>Rolodexon</b> to manage your network of people with relation
+            Don't know who is who and just can't remember <b>"THAT GUY"</b> ? Use{" "}
+            <b>Zaptoid</b> to manage your network of people with relation
             based system.
           </Text>
 
@@ -59,6 +59,9 @@ function Login() {
       </div>
       <style>
         {`
+        body{
+          background-color: #000;
+        }
         .sign-in{
           height: 100vh;
           width: 100%;
@@ -79,7 +82,7 @@ function Login() {
             border-radius: 0.5rem;
         }
         .sign-in-box:hover {
-            box-shadow: 0px 0px 0px 10px #6741d966;
+            box-shadow: 0px 0px 0px 10px #BC8CF266;
           }
         
         .sign-in-button {
@@ -97,7 +100,6 @@ function Login() {
         }
         
 		#logo{
-			border-radius: 50%;
 			object-fit: cover;	
 		}
 		

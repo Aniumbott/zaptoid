@@ -1,3 +1,4 @@
+// Import Modules
 "use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
@@ -16,11 +17,10 @@ import {
   IconSettings,
   IconLogout,
 } from "@tabler/icons-react";
-
 import { signOut } from "next-auth/react";
-
 import { Avatar } from "@mantine/core";
 
+// Styles
 const useStyles = createStyles((theme) => ({
   link: {
     width: rem(50),
@@ -35,7 +35,7 @@ const useStyles = createStyles((theme) => ({
     "&:hover": {
       opacity: 1,
       backgroundColor: theme.fn.lighten(
-        theme.fn.variant({ variant: "filled", color: theme.primaryColor })
+        theme.fn.variant({ variant: "default", color: theme.primaryColor })
           .background!,
         0.1
       ),
@@ -55,6 +55,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface NavbarLinkProps {
+  //Type for NavbarLinkProps
   icon: React.FC<any>;
   label: string;
   active?: boolean;
@@ -62,6 +63,7 @@ interface NavbarLinkProps {
 }
 
 function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+  //Single NavbarLink Component
   const { classes, cx } = useStyles();
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
@@ -76,11 +78,13 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const mockdata = [
+  //Mockdata for NavbarLink
   { icon: IconHome2, label: "Home" },
   { icon: IconUser, label: "Account" },
   { icon: IconSettings, label: "Settings" },
 ];
 
+// Export Component
 export default function NavBar() {
   const [active, setActive] = useState(2);
   const { data: session, status } = useSession() as any;
@@ -103,14 +107,13 @@ export default function NavBar() {
       p="md"
       sx={(theme) => ({
         backgroundColor: theme.fn.variant({
-          variant: "filled",
+          variant: "default",
           color: theme.primaryColor,
         }).background,
       })}
     >
       <Center>
-        <Avatar src={session.user.image} alt="Rolodexon" radius="xl" />
-        {/* <MantineLogo type="mark" inverted size={30} /> */}
+        <Avatar src={session.user.image} alt="Zaptoid" radius="xl" />
       </Center>
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>

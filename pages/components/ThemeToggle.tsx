@@ -1,7 +1,9 @@
+// Import Modules
 import { useMantineColorScheme, ActionIcon, Group } from "@mantine/core";
 import { IconSun, IconMoonStars } from "@tabler/icons-react";
 
-export default function ThemeToggle() {
+// Export Module
+export default function ThemeToggle() { //Component use to toggle theme
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
   return (

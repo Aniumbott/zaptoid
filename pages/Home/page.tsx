@@ -1,11 +1,7 @@
 "use client";
+// Import Components
 import NavBar from "../components/NavBar";
 import ThemeToggle from "../components/ThemeToggle";
-
-type Person = {
-  name: string;
-  email: string;
-} | null;
 
 export default function Home() {
   return (

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import Home from "./Home/page";
 import Auth from "./Login/page";
 
+// Extra Functions
 async function updateUser(user: any) {
   const res = await fetch(`/api/db/getUsers`, {
     method: "POST",
@@ -23,12 +24,13 @@ async function updateUser(user: any) {
   return res.json();
 }
 
+// Export Module
 export default function Main() {
   const { data: session, status } = useSession() as any;
 
   useEffect(() => {
     if (session && session.user) {
-      const users = updateUser(session.user);
+      updateUser(session.user);
     }
   }, [session]);
 
