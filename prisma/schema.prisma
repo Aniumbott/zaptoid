@@ -11,31 +11,34 @@ datasource db {
 }
 
 model User {
-  id            String     @id @default(uuid())
-  name          String?
-  phone         String?    @unique @map(name: "phone")
-  email         String?    @unique
-  joined        DateTime   @default(now()) @map(name: "joined")
-  relations     Relation[]  
-  @@map(name: "users")
+  id       String     @id @unique @default(cuid())
+  name     String
+  phone    BigInt[]   @unique
+  email    String     @unique
+  joined   DateTime
+  Person   Person[]
+  Relation Relation[]
 }
 
-model Person{
-    id          String   @id @default(uuid())
-    name        String     @map(name: "name")
-    phone       String     @unique @map(name: "phone")
-    email       String     @unique
-    description String     @map(name: "description")
-    relations   Relation[] 
-    @@map(name: "persons")
+model Person {
+  id          String     @id @unique @default(cuid())
+  name        String
+  phone       BigInt[]   @unique
+  email       String[]   @unique
+  description String?
+  createdBy   User?      @relation(fields: [userId], references: [id])
+  userId      String?
+  relationsD Relation[] @relation("RelationsD") // relations direct
+  relationsI Relation[] @relation("RelationsI") // relations indirect
 }
 
-model Relation{
-    id          String     @id @default(uuid())
-    person      Person     @relation(fields: [personIds], references: [id])
-    personIds   String      
-    user        User       @relation(fields: [created_by], references: [id])
-    created_by  String       
-    relation    String     @map(name: "relation")
-    @@map(name: "relations")
+model Relation {
+  id        String  @id @unique @default(cuid())
+  name      String
+  person1   Person? @relation(name: "RelationsD", fields: [personId1], references: [id])
+  person2   Person? @relation(name:"RelationsI", fields: [personId2], references: [id])
+  createdBy User    @relation(fields: [userId], references: [id])
+  personId1 String?
+  personId2 String?
+  userId    String
 }

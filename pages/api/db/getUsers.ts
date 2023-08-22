@@ -10,7 +10,8 @@ type dbProps = {
 };
 
 // Extra Functions
-async function updateUser(post: dbProps, res: NextApiResponse) { // Update user if exists, else create new user
+async function updateUser(post: dbProps, res: NextApiResponse) {
+  // Update user if exists, else create new user
   if (post && !post.name.length) {
     return res.status(400).json({ msg: "Name is required." });
   }
@@ -29,21 +30,12 @@ async function updateUser(post: dbProps, res: NextApiResponse) { // Update user 
         data: {
           name: post.name,
           email: post.email,
+          joined: new Date(),
         },
       });
       return res
         .status(200)
         .json({ dbData, msg: "User created successfully." });
-    } else {
-      const data = await prisma.user.update({
-        where: {
-          email: post.email,
-        },
-        data: {
-          name: post.name,
-        },
-      });
-      return res.status(200).json({ data, msg: "User updated successfully." });
     }
   } catch (err) {
     console.log(err);

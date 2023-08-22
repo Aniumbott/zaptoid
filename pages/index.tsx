@@ -21,7 +21,7 @@ async function updateUser(user: any) {
   if (!res.ok) {
     console.log(res);
   }
-  return res.json();
+  return res;
 }
 
 // Export Module
