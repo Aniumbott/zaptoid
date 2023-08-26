@@ -10,11 +10,6 @@ import { signIn } from "next-auth/react";
 // Import Components
 import logo from "../../public/zaptoid.svg";
 
-type User = {
-  name: string;
-  email: string;
-} | null;
-
 // Export Module
 function Login() {
 
@@ -38,8 +33,8 @@ function Login() {
             color="dimmed"
             className="sign-in-text"
           >
-            Don't know who is who and just can't remember <b>"THAT GUY"</b> ? Use{" "}
-            <b>Zaptoid</b> to manage your network of people with relation
+            It might happen that you just can't remember <b>"THAT GUY"</b> ? Introducing{" "}
+            <b>Zaptoid</b> a better version of old that classic contacts app which help you to manage your network of people with relation
             based system.
           </Text>
 

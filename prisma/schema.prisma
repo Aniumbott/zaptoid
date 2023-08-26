@@ -35,10 +35,10 @@ model Person {
 model Relation {
   id        String  @id @unique @default(cuid())
   name      String
-  person1   Person? @relation(name: "RelationsD", fields: [personId1], references: [id])
-  person2   Person? @relation(name:"RelationsI", fields: [personId2], references: [id])
+  isPerson  Person? @relation(name: "RelationsD", fields: [isPersonId], references: [id])
+  ofPerson  Person? @relation(name:"RelationsI", fields: [ofPersonId], references: [id])
   createdBy User    @relation(fields: [userId], references: [id])
-  personId1 String?
-  personId2 String?
+  isPersonId String?
+  ofPersonId String?
   userId    String
 }

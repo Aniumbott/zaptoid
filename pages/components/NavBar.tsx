@@ -17,8 +17,11 @@ import {
   IconSettings,
   IconLogout,
 } from "@tabler/icons-react";
-import { signOut } from "next-auth/react";
 import { Avatar } from "@mantine/core";
+import Image from "next/image";
+
+import { signOut } from "next-auth/react";
+import logo from "../../public/zaptoid.svg";
 
 // Styles
 const useStyles = createStyles((theme) => ({
@@ -86,7 +89,7 @@ const mockdata = [
 
 // Export Component
 export default function NavBar() {
-  const [active, setActive] = useState(2);
+  const [active, setActive] = useState(0);
   const { data: session, status } = useSession() as any;
   const links = mockdata.map((link, index) => (
     <NavbarLink
@@ -113,7 +116,21 @@ export default function NavBar() {
       })}
     >
       <Center>
-        <Avatar src={session.user.image} alt="Zaptoid" radius="xl" />
+        <Tooltip
+          label="Zaptoid"
+          position="right"
+          transitionProps={{ duration: 0 }}
+        >
+          <Image src={logo} alt="Zaptoid Logo" id="logo" />
+        </Tooltip>
+        <style>
+          {`
+            #logo {
+            height: 3.125rem;
+          `}
+        </style>
+
+        {/* <Avatar src={session.user.image} alt="Zaptoid" radius="xl" /> */}
       </Center>
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>
