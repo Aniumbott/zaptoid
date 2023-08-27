@@ -1,5 +1,5 @@
 // Import Modules
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
 
 // Define Types

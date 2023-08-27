@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getUser } from "./handleUser";
 import { getAllPersons, createPerson } from "./handlePerson";
+import { getRelations } from "./handleRelation";
 
 BigInt.prototype.toJSON = function () { // Ignore the error
   return this.toString();
@@ -16,15 +17,16 @@ export default async function handleDbRequest( // Handle POST request
     const post: any = JSON.parse(req.body);
     if (req.method === "POST") {
       switch (
-        post.action // Hadle they action
+        post.action // Types of actions
       ) {
         case "getUser": // Handle user update as well create
           return await getUser(post, res);
-        case "getAllPersons": // Handle user update as well create
+        case "getAllPersons": // Handle to colect all the persons
           return await getAllPersons(post, res);
-        case "createUserPerson": // Handle user update as well create
+        case "createUserPerson": // Handle userperson objrct
           return await createPerson(post, res, true);
-
+        case "getRelations": // Handle =to collect all the specific relations
+          return await getRelations(post, res);
         default:
           return res.status(400).json({ msg: "Invalid action." });
       }

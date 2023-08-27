@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
               "#AE2FF0",
               "#AC21F0",
               "#AA14F0",
-            ]
+            ],
           },
           primaryColor: "violet",
         }}

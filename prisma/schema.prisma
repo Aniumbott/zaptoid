@@ -28,8 +28,8 @@ model Person {
   description String?
   createdBy   User?      @relation(fields: [userId], references: [id])
   userId      String?
-  relationsD Relation[] @relation("RelationsD") // relations direct
-  relationsI Relation[] @relation("RelationsI") // relations indirect
+  relationsD Relation[] @relation(name: "RelationsD") // relations direct
+  relationsI Relation[] @relation(name: "RelationsI") // relations indirect
 }
 
 model Relation {

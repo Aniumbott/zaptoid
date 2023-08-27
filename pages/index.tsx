@@ -6,8 +6,8 @@ import { resolve } from "path";
 import { useEffect, useState } from "react";
 
 // Import Components
-import Home from "./Home/page";
-import Auth from "./Login/page";
+import Home from "./home/page";
+import Auth from "./login/page";
 
 interface User {
   id: string;
@@ -95,14 +95,14 @@ export default function Main() {
 
   useEffect(() => {
     if (user.id) {
-      console.log(user);
+      // console.log(user);
       const getAllRes = getAllPerson(user.id);
       getAllRes.then((res) => {
         if (res.status === 200) {
           res.json().then((data) => {
             if (data.dbData.length != 0) {
               setPersons(data.dbData);
-              console.log(persons);
+              // console.log(persons);
             }
           });
         }
