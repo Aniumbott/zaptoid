@@ -5,9 +5,10 @@ import { useRouter } from "next/router";
 // Import Components
 import NavBar from "../components/NavBar";
 import Contacts from "../components/Contacts";
-import Person from "../components/Person";
+import PersonProfile from "../components/PersonProfile";
+import { Relation, Person } from "@/prisma/dbTypes";
 
-export default function Home(props: any) {
+export default function Home(props: {persons:Person[], relations:Relation[]}) {
   const { persons, relations } = props;
   const router = useRouter();
 
@@ -15,7 +16,7 @@ export default function Home(props: any) {
     <>
       <NavBar />
       {router.query.personId ? (
-        <Person persons={persons} relations={relations}/>
+        <PersonProfile persons={persons} relations={relations}/>
       ) : (
         <Contacts persons={persons} />
       )}

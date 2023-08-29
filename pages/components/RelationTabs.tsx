@@ -1,10 +1,11 @@
 // Import Modules
+import { Person, Relation } from "@/prisma/dbTypes";
 import { Anchor, Badge, Table, Tabs } from "@mantine/core";
 import { IconArrowsSplit2, IconArrowsJoin2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
 // Export Module
-export default function RelationTabs(props: any) {
+export default function RelationTabs(props: {relationsD:Relation[], relationsI:Relation[], persons:Person[]}) {
   const { relationsD, relationsI, persons } = props;
   const router = useRouter();
   return (
@@ -21,7 +22,7 @@ export default function RelationTabs(props: any) {
       <Tabs.Panel value="direct" pl="xs">
         <Table highlightOnHover striped>
           <tbody>
-            {relationsD.map((relation: any) => {
+            {relationsD ? relationsD.map((relation: Relation) => {
               return (
                 <tr key={relation.id}>
                   <td>
@@ -41,14 +42,17 @@ export default function RelationTabs(props: any) {
                     >
                       {
                         persons.filter(
-                          (person: any) => person.id === relation.ofPersonId
+                          (person: Person) => person.id === relation.ofPersonId
                         )[0].name
                       }
                     </Anchor>
                   </td>
                 </tr>
               );
-            })}
+            })
+          :
+          <b>NA</b>
+          }
           </tbody>
         </Table>
       </Tabs.Panel>
@@ -56,7 +60,7 @@ export default function RelationTabs(props: any) {
       <Tabs.Panel value="indirect" pl="xs">
         <Table highlightOnHover striped>
           <tbody>
-            {relationsI.map((relation: any) => {
+            {relationsI ?relationsI.map((relation: Relation) => {
               return (
                 <tr key={relation.id}>
                   <td>
@@ -73,7 +77,7 @@ export default function RelationTabs(props: any) {
                     >
                       {
                         persons.filter(
-                          (person: any) => person.id === relation.isPersonId
+                          (person: Person) => person.id === relation.isPersonId
                         )[0].name
                       }
                     </Anchor>
@@ -83,7 +87,10 @@ export default function RelationTabs(props: any) {
                   </td>
                 </tr>
               );
-            })}
+            })
+          :
+          <b>NA</b>
+          }
           </tbody>
         </Table>
       </Tabs.Panel>

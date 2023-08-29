@@ -2,12 +2,13 @@
 import { useRouter } from "next/router";
 import { Title } from "@mantine/core";
 import { Loader } from "@mantine/core";
+import { Person } from "@/prisma/dbTypes";
 
 // Import Components
 import PersonCard from "./PersonCard";
 
 // Export Module
-export default function Contacts(props: any) {
+export default function Contacts(props: { persons: Person[] }) {
   const { persons } = props;
   const router = useRouter();
 
@@ -16,8 +17,8 @@ export default function Contacts(props: any) {
       <div className="home-containeer">
         <Title order={1}>Contacts</Title>
         <div className="cards-conatiner">
-          {persons[0].id != "" ? (
-            persons.map((person: any) => (
+          {persons && persons.length > 1 ? (
+            persons.map((person: Person) => (
               <div
                 className="card"
                 key={person.id}

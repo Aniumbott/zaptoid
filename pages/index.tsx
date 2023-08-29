@@ -1,5 +1,6 @@
 "use client";
 
+import { Person, Relation, User } from "@/prisma/dbTypes";
 // Import Modules
 import { useSession } from "next-auth/react";
 import { resolve } from "path";
@@ -12,7 +13,7 @@ import Auth from "./login/page";
 // Extra Functions
 
 // Funciton to get user from database
-async function getUser(user: any) {
+async function getUser(user: User) {
   const res = await fetch(`/api/db`, {
     method: "POST",
     body: JSON.stringify({
@@ -25,14 +26,14 @@ async function getUser(user: any) {
 }
 
 // Function to create a person object of user
-async function createPerson(person: any) {
+async function createPerson(person: User) {
   const res = await fetch(`/api/db`, {
     method: "POST",
     body: JSON.stringify({
       action: "createUserPerson",
       name: person.name,
       email: [person.email],
-      phone: [person.phone] || [],
+      phone: [person.phone[0]] || [],
       id: person.id,
     }),
   });
@@ -54,7 +55,7 @@ const getAllRelations = async (userId: string) => {
 };
 
 // Function to get all person
-async function getAllPerson(userId: any) {
+async function getAllPerson(userId: string) {
   const res = await fetch(`/api/db`, {
     method: "POST",
     body: JSON.stringify({
@@ -74,7 +75,7 @@ export default function Main() {
     email: "",
     phone: [],
     joined: new Date(),
-  }); // User
+  } as User); // User
   const [relations, setRelations] = useState([
     {
       id: "",
@@ -83,19 +84,21 @@ export default function Main() {
       ofPersonId: "",
       userId: "",
     },
-  ]); // [Relation]
+  ] as Relation[]); // [Relation]
   const [persons, setPersons] = useState([
     {
       id: "",
       name: "",
-      email: [],
+      email: [""],
       phone: [],
       description: "",
+      userId: "",
     },
-  ]); // [Person]
+  ] as Person[]); // [Person]
   const { data: session, status } = useSession() as any;
 
-  // Event listners
+  // dbData API calls
+  
   useEffect(() => {
     if (session && session.user) {
       const getRes = getUser(session.user); // Update as well as creaate user
@@ -132,7 +135,7 @@ export default function Main() {
           if (res.status === 200) {
             res.json().then((data) => {
               setRelations(data.dbData);
-              console.log(relations);
+              // console.log(relations);
             });
           }
           resolve();

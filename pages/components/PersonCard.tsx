@@ -1,12 +1,22 @@
 // Import Modules
-import { Card, Text, Badge, Group, Avatar } from "@mantine/core";
+import { Person } from "@/prisma/dbTypes";
+import { Card, Text, Group, Avatar } from "@mantine/core";
 
 // Custom Types
 type color = "blue" | "red" | "green" | "yellow" | "gray";
 
 // Export Module
-export default function PersonCard(props: any) {
-  const { person } = props;
+export default function PersonCard(props: { person: Person }) {
+  const person = props.person
+    ? props.person
+    : ({
+        id: "",
+        name: "",
+        email: [],
+        phone: [],
+        description: "",
+        userId: "",
+      } as Person);
 
   return (
     <>
@@ -14,7 +24,6 @@ export default function PersonCard(props: any) {
         shadow="sm"
         padding="xs"
         radius="xl"
-        onClick={() => console.log("clicked")}
       >
         <Group position="apart">
           <Avatar
@@ -33,7 +42,7 @@ export default function PersonCard(props: any) {
               <b>{person.name}</b>
             </Text>
             <Text size="xs" c="dimmed">
-              {person.phone[0] ? person.phone[0] : "(none)"}
+              {person.phone.length > 0 ? Number(person.phone[0]) : "(none)"}
             </Text>
           </div>
         </Group>

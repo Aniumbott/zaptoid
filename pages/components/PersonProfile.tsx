@@ -18,6 +18,7 @@ import {
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Person, Relation } from "@/prisma/dbTypes";
 
 // Import Components
 import RelationTabs from "./RelationTabs";
@@ -27,22 +28,23 @@ import wallpaper from "../../public/profile-bg.svg";
 type color = "blue" | "red" | "green" | "yellow" | "gray";
 
 // Export Module
-export default function Person(props: any) {
+export default function PersonProfile(props: {persons:Person[], relations:Relation[]}) {
   const { persons, relations } = props;
   const [person, setPerson] = useState({
     id: "",
     name: "",
-    email: [],
+    email: [""],
     phone: [],
     description: "",
-  });
+    userId: "",
+  } as Person);
   const router = useRouter();
 
   useEffect(() => {
     // Set the curent person state and fetch all the relations of the person and update the state
     if (router.query.personId) {
       setPerson(
-        persons.filter((person: any) => person.id === router.query.personId)[0]
+        persons.filter((person: Person) => person.id === router.query.personId)[0]
       );
     }
   }, [router.query.personId]);
@@ -76,7 +78,7 @@ export default function Person(props: any) {
               >
                 <Title order={2}> {person.name}</Title>
                 <Text c="dimmed">
-                  {person.phone[0] ? person.phone[0] : "(none)"}
+                  {person.phone[0] ? Number(person.phone[0]) : "(none)"}
                 </Text>
                 <Text c="dimmed">{person.email[0]}</Text>
 
@@ -143,12 +145,12 @@ export default function Person(props: any) {
                   <Title order={2}>Relations</Title>
                   <div className="relation-tabs">
                     <RelationTabs
-                      relationsD={relations.filter(
-                        (relation: any) => relation.isPersonId === person.id
-                      )}
-                      relationsI={relations.filter(
-                        (relation: any) => relation.ofPersonId === person.id
-                      )}
+                      relationsD={relations ? relations.filter(
+                        (relation: Relation) => relation.isPersonId === person.id
+                      ): []}
+                      relationsI={relations ? relations.filter(
+                        (relation: Relation) => relation.ofPersonId === person.id
+                      ): []}
                       persons={persons}
                     />
                   </div>
