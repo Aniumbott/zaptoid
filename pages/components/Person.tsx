@@ -1,9 +1,23 @@
 // import Modules
 import { useRouter } from "next/router";
-import { Avatar, Card, Divider, Title, Text, Button } from "@mantine/core";
-import { IconArrowNarrowLeft } from "@tabler/icons-react";
+import {
+  Avatar,
+  Card,
+  Divider,
+  Title,
+  Text,
+  Button,
+  ActionIcon,
+} from "@mantine/core";
+import {
+  IconArrowNarrowLeft,
+  IconPhone,
+  IconBrandWhatsapp,
+  IconMail,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // Import Components
 import RelationTabs from "./RelationTabs";
@@ -14,42 +28,31 @@ type color = "blue" | "red" | "green" | "yellow" | "gray";
 
 // Export Module
 export default function Person(props: any) {
-  const { userId, person } = props;
-  const [relations, setRelations] = useState([] as any);
-  
-  // Function to fetch the relations
-  const getRelations = async () => {
-    const data = await fetch(`/api/db`, {
-      method: "POST",
-      body: JSON.stringify({
-        action: "getRelations",
-        isPersonId: "",
-        ofPersonId: "",
-        userId: userId,
-      }),
-    });
-    return data;
-  };
-
-  useEffect(() => { // Fetch all the relations of the person and update the state
-    getRelations().then((res) => {
-      if (res.status === 200) {
-        res.json().then((data) => {
-          setRelations(data.dbData);
-          console.log(data.dbData);
-        });
-      }
-    });
-  }, [person]);
-
+  const { persons, relations } = props;
+  const [person, setPerson] = useState({
+    id: "",
+    name: "",
+    email: [],
+    phone: [],
+    description: "",
+  });
   const router = useRouter();
+
+  useEffect(() => {
+    // Set the curent person state and fetch all the relations of the person and update the state
+    if (router.query.personId) {
+      setPerson(
+        persons.filter((person: any) => person.id === router.query.personId)[0]
+      );
+    }
+  }, [router.query.personId]);
+
   return (
     <>
       {/* <p>Post: {router.query.id}</p> */}
       <div className="container">
         <div className="wallpaper">
           <Image src={wallpaper} alt="wallpaper" />
-          {/* <Image src={wallpaper} alt="wallpaper" style={{ width: "50%" }} /> */}
         </div>
         <div className="person">
           <div className="person-details">
@@ -76,6 +79,42 @@ export default function Person(props: any) {
                   {person.phone[0] ? person.phone[0] : "(none)"}
                 </Text>
                 <Text c="dimmed">{person.email[0]}</Text>
+
+                <div className="person-actions">
+                  <Link href={`tel:${person.phone[0]}`} target="_blank">
+                    <ActionIcon
+                      style={{ margin: "0 0.25rem" }}
+                      color="primary"
+                      radius="sm"
+                      variant="light"
+                    >
+                      <IconPhone />{" "}
+                    </ActionIcon>
+                  </Link>
+                  <Link
+                    href={`https://wa.me/${person.phone[0]}`}
+                    target="_blank"
+                  >
+                    <ActionIcon
+                      style={{ margin: "0 0.25rem" }}
+                      color="primary"
+                      radius="sm"
+                      variant="light"
+                    >
+                      <IconBrandWhatsapp />{" "}
+                    </ActionIcon>
+                  </Link>
+                  <Link href={`mailto:${person.email[0]}`} target="_blank">
+                    <ActionIcon
+                      style={{ margin: "0 0.25rem" }}
+                      color="primary"
+                      radius="sm"
+                      variant="light"
+                    >
+                      <IconMail />{" "}
+                    </ActionIcon>
+                  </Link>
+                </div>
 
                 <Button
                   variant="subtle"
@@ -110,6 +149,7 @@ export default function Person(props: any) {
                       relationsI={relations.filter(
                         (relation: any) => relation.ofPersonId === person.id
                       )}
+                      persons={persons}
                     />
                   </div>
                 </div>
@@ -167,6 +207,14 @@ export default function Person(props: any) {
         }
         .section-right {
           width: 100%;
+        }
+        .person-actions {
+          display: flex;
+          flex-direction: row;
+          justify-content: left;
+          align-items: center;
+          width: 100%;
+          margin-top: 1rem;
         }
         .description-container,
         .relations-container {

@@ -8,7 +8,7 @@ type dbProps = {
   name: string;
   email: string[];
   phone: string[];
-  id: string;
+  userId: string;
 };
 
 JSON.stringify(
@@ -29,7 +29,7 @@ async function createPerson(
     const dbData = await prisma.person.findUnique({
       where: {
         email: post.email,
-        userId: post.id,
+        userId: post.userId,
       },
     });
 
@@ -38,7 +38,7 @@ async function createPerson(
         data: {
           name: isUser ? "self" : post.name,
           email: post.email,
-          userId: post.id,
+          userId: post.userId,
         },
       });
     }
@@ -56,7 +56,7 @@ async function getAllPersons(post: dbProps, res: NextApiResponse) {
   try {
     const dbData = await prisma.person.findMany({
       where: {
-        userId: post.id,
+        userId: post.userId,
       },
     });
     if (!dbData) {

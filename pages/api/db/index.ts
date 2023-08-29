@@ -4,7 +4,7 @@ import { getUser } from "./handleUser";
 import { getAllPersons, createPerson } from "./handlePerson";
 import { getRelations } from "./handleRelation";
 
-BigInt.prototype.toJSON = function () { // Ignore the error
+(BigInt.prototype as any).toJSON = function () {
   return this.toString();
 };
 

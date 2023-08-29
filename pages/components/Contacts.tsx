@@ -2,14 +2,13 @@
 import { useRouter } from "next/router";
 import { Title } from "@mantine/core";
 import { Loader } from "@mantine/core";
-import { useEffect } from "react";
 
 // Import Components
 import PersonCard from "./PersonCard";
 
 // Export Module
 export default function Contacts(props: any) {
-  const { userId, persons } = props;
+  const { persons } = props;
   const router = useRouter();
 
   return (
@@ -17,7 +16,7 @@ export default function Contacts(props: any) {
       <div className="home-containeer">
         <Title order={1}>Contacts</Title>
         <div className="cards-conatiner">
-          {persons.length > 0 ? (
+          {persons[0].id != "" ? (
             persons.map((person: any) => (
               <div
                 className="card"
@@ -28,7 +27,7 @@ export default function Contacts(props: any) {
                   });
                 }}
               >
-                <PersonCard person={person} userId={userId} />
+                <PersonCard person={person} />
               </div>
             ))
           ) : (

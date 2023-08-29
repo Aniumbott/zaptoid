@@ -9,14 +9,6 @@ import { useEffect, useState } from "react";
 import Home from "./home/page";
 import Auth from "./login/page";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  phone: string[];
-  joined: Date;
-}
-
 // Extra Functions
 
 // Funciton to get user from database
@@ -47,13 +39,27 @@ async function createPerson(person: any) {
   return res;
 }
 
+// Function to get all the relations
+const getAllRelations = async (userId: string) => {
+  const data = await fetch(`/api/db`, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "getRelations",
+      isPersonId: "",
+      ofPersonId: "",
+      userId: userId,
+    }),
+  });
+  return data;
+};
+
 // Function to get all person
-async function getAllPerson(id: any) {
+async function getAllPerson(userId: any) {
   const res = await fetch(`/api/db`, {
     method: "POST",
     body: JSON.stringify({
       action: "getAllPersons",
-      id: id,
+      userId: userId,
     }),
   });
   return res;
@@ -61,8 +67,32 @@ async function getAllPerson(id: any) {
 
 // Export Module
 export default function Main() {
-  const [user, setUser] = useState({} as User);
-  const [persons, setPersons] = useState([]); // [Person]
+  // States for all the dbData
+  const [user, setUser] = useState({
+    id: "",
+    name: "",
+    email: "",
+    phone: [],
+    joined: new Date(),
+  }); // User
+  const [relations, setRelations] = useState([
+    {
+      id: "",
+      name: "",
+      isPersonId: "",
+      ofPersonId: "",
+      userId: "",
+    },
+  ]); // [Relation]
+  const [persons, setPersons] = useState([
+    {
+      id: "",
+      name: "",
+      email: [],
+      phone: [],
+      description: "",
+    },
+  ]); // [Person]
   const { data: session, status } = useSession() as any;
 
   // Event listners
@@ -96,23 +126,37 @@ export default function Main() {
   useEffect(() => {
     if (user.id) {
       // console.log(user);
-      const getAllRes = getAllPerson(user.id);
-      getAllRes.then((res) => {
-        if (res.status === 200) {
-          res.json().then((data) => {
-            if (data.dbData.length != 0) {
-              setPersons(data.dbData);
-              // console.log(persons);
+      const getAllRes = getAllRelations(user.id);
+      getAllRes // Get all the relations of the user
+        .then((res) => {
+          if (res.status === 200) {
+            res.json().then((data) => {
+              setRelations(data.dbData);
+              console.log(relations);
+            });
+          }
+          resolve();
+        })
+        .then(() => {
+          const getAllper = getAllPerson(user.id);
+          getAllper.then((res) => {
+            // Get all the persons of the user
+            if (res.status === 200) {
+              res.json().then((data) => {
+                if (data.dbData.length != 0) {
+                  setPersons(data.dbData);
+                  // console.log(persons);
+                }
+              });
             }
+            resolve();
           });
-        }
-        resolve();
-      });
+        });
     }
   }, [user]);
 
   if (session && session.user) {
-    return <Home user={user} persons={persons}/>;
+    return <Home persons={persons} relations={relations} />;
   }
   return <Auth />;
 }
