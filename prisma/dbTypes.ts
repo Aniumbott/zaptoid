@@ -23,4 +23,14 @@ type Person = {
   userId: string;
 };
 
+const personDefault: Person = {
+  id: "",
+  name: "",
+  email: [""],
+  phone: [""],
+  description: "",
+  userId: "",
+};
+
 export type { User, Relation, Person };
+export { personDefault };

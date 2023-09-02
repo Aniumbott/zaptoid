@@ -7,7 +7,7 @@ import Image from "next/image";
 import Head from "next/head";
 
 // Import Components
-import { Person, Relation } from "@/prisma/dbTypes";
+import { Person, personDefault, Relation } from "@/prisma/dbTypes";
 import wallpaper from "../../public/profile-bg.svg";
 import SectionLeft from "./SectionLeft";
 import SectionRight from "./SectionRight";
@@ -17,33 +17,30 @@ import NavBar from "../components/NavBar";
 export default function Page() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [relations, setRelations] = useState<Relation[]>([]);
-
-  useEffect(() => {
-    // Fetch all the persons and update the state
-    const getPersons = JSON.parse(localStorage.getItem("persons") || "");
-    const getRelations = JSON.parse(localStorage.getItem("relations") || "");
-    setPersons(getPersons);
-    setRelations(getRelations);
-  }, []);
-
-  const [person, setPerson] = useState({
-    id: "",
-    name: "",
-    email: [""],
-    phone: [""],
-    description: "",
-    userId: "",
-  } as Person);
+  const [person, setPerson] = useState(personDefault);
 
   const [editable, setEditable] = useState(false);
   const router = useRouter();
 
+  // Event Handlers
+  // Fetch all the persons and update the state
   useEffect(() => {
-    // gather all the persons and relations from localStorage
+    const getPersons = JSON.parse(localStorage.getItem("persons") || "");
+    const getRelations = JSON.parse(localStorage.getItem("relations") || "");
+    if (getPersons) {
+      setPersons(getPersons);
+    }
+    if (getRelations) {
+      setRelations(getRelations);
+    }
+  }, []);
+
+  // gather all the persons and relations from localStorage
+  useEffect(() => {
     // console.log(persons);
     if (router.query.personId) {
       const getPerson = persons.filter(
-        (person: Person) => person.id == router.query.personId
+        (p: Person) => p.id == router.query.personId
       )[0];
 
       if (getPerson) {

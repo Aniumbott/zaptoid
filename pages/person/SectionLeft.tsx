@@ -9,18 +9,19 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { TextInput } from "@mantine/core";
-import { Person } from "@/prisma/dbTypes";
-import { useEffect } from "react";
+import { Person, personDefault } from "@/prisma/dbTypes";
 
 // Custom Types
 type color = "blue" | "red" | "green" | "yellow" | "gray";
 
 // Export Module
-export default function SectionLeft(props: { person: Person; editable: boolean }) {
-  const { person, editable } = props;
-  useEffect(() => {
-    console.log(person);
-  }, [person]);
+export default function SectionLeft(props: {
+  person: Person;
+  editable: boolean;
+}) {
+  const person = props.person || personDefault;
+  const { editable } = props;
+
   return (
     <>
       <div className="section-left">
@@ -144,6 +145,4 @@ export default function SectionLeft(props: { person: Person; editable: boolean }
       `}</style>
     </>
   );
-
-
 }

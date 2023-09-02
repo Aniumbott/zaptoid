@@ -4,7 +4,7 @@ import { Card, Title, Text, Button, Textarea } from "@mantine/core";
 import { IconArrowNarrowLeft, IconEdit } from "@tabler/icons-react";
 
 // Import Components
-import { Person, Relation } from "@/prisma/dbTypes";
+import { Person, personDefault, Relation } from "@/prisma/dbTypes";
 import RelationTabs from "./RelationTabs";
 
 // Export Module
@@ -15,7 +15,8 @@ export default function SectionRight(props: {
   editable: boolean;
   setEditable: Function;
 }) {
-  const { person, persons, relations, editable, setEditable } = props;
+  const person = props.person || personDefault;
+  const { persons, relations, editable, setEditable } = props;
   const router = useRouter();
 
   return (
