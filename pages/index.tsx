@@ -158,8 +158,15 @@ export default function Main() {
     }
   }, [user]);
 
+  // update local storage
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("relations", JSON.stringify(relations));
+    localStorage.setItem("persons", JSON.stringify(persons));
+  }, [user, relations, persons]);
+
   if (session && session.user) {
-    return <Home persons={persons} relations={relations} />;
+    return <Home persons={persons} />;
   }
   return <Auth />;
 }

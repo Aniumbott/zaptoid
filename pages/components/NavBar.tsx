@@ -17,8 +17,8 @@ import {
   IconSettings,
   IconLogout,
 } from "@tabler/icons-react";
-import { Avatar } from "@mantine/core";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import { signOut } from "next-auth/react";
 import logo from "../../public/zaptoid.svg";
@@ -82,21 +82,25 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const mockdata = [
   //Mockdata for NavbarLink
-  { icon: IconHome2, label: "Home" },
-  { icon: IconUser, label: "Account" },
-  { icon: IconSettings, label: "Settings" },
+  { icon: IconHome2, label: "Home", link: "/" },
+  { icon: IconUser, label: "Account", link: "/account" },
+  { icon: IconSettings, label: "Settings", link: "/settings" },
 ];
 
 // Export Component
 export default function NavBar() {
   const [active, setActive] = useState(0);
   const { data: session, status } = useSession() as any;
+  const router = useRouter();
   const links = mockdata.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
       active={index === active}
-      onClick={() => setActive(index)}
+      onClick={() => {
+        setActive(index);
+        router.push(`${link.link}`);
+      }}
     />
   ));
 

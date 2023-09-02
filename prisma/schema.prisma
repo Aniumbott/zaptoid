@@ -13,7 +13,7 @@ datasource db {
 model User {
   id       String     @id @unique @default(cuid())
   name     String
-  phone    BigInt[]   @unique
+  phone    String[]   @unique
   email    String     @unique
   joined   DateTime
   Person   Person[]
@@ -23,7 +23,7 @@ model User {
 model Person {
   id          String     @id @unique @default(cuid())
   name        String
-  phone       BigInt[]   @unique
+  phone       String[]   @unique
   email       String[]   @unique
   description String?
   createdBy   User?      @relation(fields: [userId], references: [id])

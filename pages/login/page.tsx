@@ -6,54 +6,53 @@ import { Card } from "@mantine/core";
 import { Text } from "@mantine/core";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { signIn } from "next-auth/react";
+import Head from "next/head";
 
 // Import Components
 import logo from "../../public/zaptoid.svg";
 
 // Export Module
 function Login() {
-
   return (
-    <div className="sign-in">
-      <div className="sign-in-box">
-        <Card shadow="sm" withBorder>
-          <Card.Section className="sign-in-logo">
-            <Image
-              src={logo}
-              id="logo"
-              alt="logo"
-              height={300}
-              width={300}
-            />
-          </Card.Section>
+    <>
+      <Head>
+        <title>Log In | Zaptoid</title>
+      </Head>
+      <div className="sign-in">
+        <div className="sign-in-box">
+          <Card shadow="sm" withBorder>
+            <Card.Section className="sign-in-logo">
+              <Image src={logo} id="logo" alt="logo" height={300} width={300} />
+            </Card.Section>
 
-          <Text
-            align="justify"
-            size="lg"
-            color="dimmed"
-            className="sign-in-text"
-          >
-            It might happen that you just can't remember <b>"THAT GUY"</b> ? Introducing{" "}
-            <b>Zaptoid</b> a better version of old that classic contacts app which help you to manage your network of people with relation
-            based system.
-          </Text>
+            <Text
+              align="justify"
+              size="lg"
+              color="dimmed"
+              className="sign-in-text"
+            >
+              It might happen that you just can't remember <b>"THAT GUY"</b> ?
+              Introducing <b>Zaptoid</b> a better version of old that classic
+              contacts app which help you to manage your network of people with
+              relation based system.
+            </Text>
 
-          <Button
-            leftIcon={<IconBrandGoogle size={18} />}
-            variant="filled"
-            onClick={() => {
-              signIn("google");
-            }}
-            fullWidth
-            size="lg"
-            className="sign-in-button"
-          >
-            Sign In with Google
-          </Button>
-        </Card>
-      </div>
-      <style>
-        {`
+            <Button
+              leftIcon={<IconBrandGoogle size={18} />}
+              variant="filled"
+              onClick={() => {
+                signIn("google");
+              }}
+              fullWidth
+              size="lg"
+              className="sign-in-button"
+            >
+              Sign In with Google
+            </Button>
+          </Card>
+        </div>
+        <style>
+          {`
         body{
           background-color: #000;
         }
@@ -104,8 +103,9 @@ function Login() {
 
 
             `}
-      </style>
-    </div>
+        </style>
+      </div>
+    </>
   );
 }
 
