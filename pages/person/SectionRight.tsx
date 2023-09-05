@@ -1,7 +1,13 @@
 // import Modules
 import { useRouter } from "next/router";
 import { Card, Title, Text, Button, Textarea } from "@mantine/core";
-import { IconArrowNarrowLeft, IconEdit } from "@tabler/icons-react";
+import {
+  IconArrowNarrowLeft,
+  IconEdit,
+  IconX,
+  IconTrash,
+  IconCheck,
+} from "@tabler/icons-react";
 
 // Import Components
 import { Person, personDefault, Relation } from "@/prisma/dbTypes";
@@ -26,9 +32,11 @@ export default function SectionRight(props: {
           <div className="description-container">
             <Title order={4}>Description</Title>
             {editable ? (
+              // Description Input
               <Textarea
                 defaultValue={person.description}
                 placeholder="Anything special?"
+                radius="md"
               />
             ) : person.description ? (
               <Text>{person.description}</Text>
@@ -42,52 +50,86 @@ export default function SectionRight(props: {
             <Title order={4}>Relations</Title>
             <div className="relation-tabs">
               <RelationTabs
-                relationsD={
-                  relations
-                    ? relations.filter(
-                        (relation: Relation) =>
-                          relation.isPersonId === person.id
-                      )
-                    : []
-                }
-                relationsI={
-                  relations
-                    ? relations.filter(
-                        (relation: Relation) =>
-                          relation.ofPersonId === person.id
-                      )
-                    : []
-                }
+                relations={relations}
                 persons={persons}
+                editable={editable}
               />
             </div>
           </div>
-          <Button
-            variant="subtle"
-            radius="xl"
-            style={{
-              position: "absolute",
-              bottom: "0",
-              left: "0",
-              margin: "1rem",
-            }}
-            onClick={() => router.back()}
-          >
-            <IconArrowNarrowLeft />
-            Back
-          </Button>
-          <Button
-            variant="subtle"
-            style={{
-              position: "absolute",
-              bottom: "0",
-              right: "0",
-              margin: "1rem",
-            }}
-            onClick={() => setEditable(!editable)}
-          >
-            <IconEdit />
-          </Button>
+          {editable ? (
+            <div>
+              <Button
+                variant="light"
+                radius="xl"
+                style={{
+                  position: "absolute",
+                  bottom: "0",
+                  left: "0",
+                  margin: "1rem",
+                }}
+                // onClick={}
+                color="red"
+              >
+                <IconTrash /> Delete
+              </Button>
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "0",
+                  right: "0",
+                  margin: "1rem",
+                }}
+              >
+                <Button
+                  variant="light"
+                  onClick={() => setEditable(!editable)}
+                  radius="xl"
+                  color="red"
+                >
+                  <IconX /> Cancel
+                </Button>
+                <Button
+                  variant="light"
+                  // onClick={}
+                  type="submit"
+                  style={{ marginLeft: "1rem" }}
+                  radius="xl"
+                >
+                  <IconCheck /> Save
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <Button
+                variant="subtle"
+                radius="xl"
+                style={{
+                  position: "absolute",
+                  bottom: "0",
+                  left: "0",
+                  margin: "1rem",
+                }}
+                onClick={() => router.back()}
+              >
+                <IconArrowNarrowLeft />
+                Back
+              </Button>
+              <Button
+                variant="subtle"
+                style={{
+                  position: "absolute",
+                  bottom: "0",
+                  right: "0",
+                  margin: "1rem",
+                }}
+                onClick={() => setEditable(!editable)}
+                radius="xl"
+              >
+                <IconEdit /> Edit
+              </Button>
+            </div>
+          )}
         </Card>
       </div>
       <style jsx>{`

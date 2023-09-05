@@ -32,5 +32,13 @@ const personDefault: Person = {
   userId: "",
 };
 
+const relationDefault = {
+  id: "",
+  name: "",
+  isPersonId: "",
+  ofPersonId: "",
+  userId: "",
+};
+
 export type { User, Relation, Person };
-export { personDefault };
+export { personDefault, relationDefault };

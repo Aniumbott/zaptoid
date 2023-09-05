@@ -118,6 +118,7 @@ export default function NavBar() {
           color: theme.primaryColor,
         }).background,
       })}
+      className="navbar"
     >
       <Center>
         <Tooltip
@@ -129,6 +130,11 @@ export default function NavBar() {
         </Tooltip>
         <style>
           {`
+          .navbar{
+            position: fixed;
+            top: 0;
+            left: 0;
+          }
             #logo {
             height: 3.125rem;
           `}

@@ -18,7 +18,6 @@ export default function Page() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [relations, setRelations] = useState<Relation[]>([]);
   const [person, setPerson] = useState(personDefault);
-
   const [editable, setEditable] = useState(false);
   const router = useRouter();
 
@@ -35,7 +34,7 @@ export default function Page() {
     }
   }, []);
 
-  // gather all the persons and relations from localStorage
+  // Gather all the persons and relations from localStorage
   useEffect(() => {
     // console.log(persons);
     if (router.query.personId) {
@@ -61,7 +60,7 @@ export default function Page() {
           <Image src={wallpaper} alt="wallpaper" />
         </div>
         <div className="person">
-          <div className="person-details">
+          <div className="person-details"> 
             <SectionLeft person={person} editable={editable} />
             <Divider orientation="vertical" />
             <SectionRight

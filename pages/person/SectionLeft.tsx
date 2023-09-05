@@ -9,7 +9,10 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { TextInput } from "@mantine/core";
+
+// Import Components
 import { Person, personDefault } from "@/prisma/dbTypes";
+import MultiInput from "./MultiInput";
 
 // Custom Types
 type color = "blue" | "red" | "green" | "yellow" | "gray";
@@ -39,14 +42,23 @@ export default function SectionLeft(props: {
             {person.name.split(" ").map((n: string) => n[0])}
           </Avatar>
         </div>
-        <Card style={{ width: "100%", height: "100%", paddingTop: "90px" }}>
+        <Card
+          style={{
+            width: "100%",
+            height: "100%",
+            paddingTop: "90px",
+            overflowY: "scroll",
+          }}
+          className="scrollbar-hidden"
+        >
           <div className="person-name">
             {editable ? (
+              // Name Input
               <TextInput
                 defaultValue={person.name}
                 placeholder="Full Name"
                 label="Person name"
-                withAsterisk
+                radius="md"
               />
             ) : (
               <Title order={2}> {person.name}</Title>
@@ -56,13 +68,12 @@ export default function SectionLeft(props: {
             <Title order={4}> Phone</Title>
             {person.phone.length > 0 ? (
               editable ? (
-                person.phone.map((phone: String, key: number) => {
-                  return <Text key={key}>comming soon...</Text>; // Multi Input yet to come
-                })
+                // Phone Input
+                <MultiInput existing={person.phone} />
               ) : (
-                person.phone.map((phone: String) => {
+                person.phone.map((phone: String, key) => {
                   return (
-                    <CopyButton value={`${phone}`}>
+                    <CopyButton value={`${phone}`} key={key}>
                       {({ copied, copy }) => (
                         <Tooltip label="copy" position="bottom">
                           <Button
@@ -90,13 +101,12 @@ export default function SectionLeft(props: {
             <Title order={4}> E-Mail</Title>
             {person.email.length > 0 ? (
               editable ? (
-                person.email.map((email: string, key: number) => {
-                  return <Text key={key}>comming soon...</Text>; // Multi Input yet to come
-                })
+                // Email Input
+                <MultiInput existing={person.email} />
               ) : (
-                person.email.map((email: string) => {
+                person.email.map((email: string, key) => {
                   return (
-                    <CopyButton value={`${email}`}>
+                    <CopyButton value={`${email}`} key={key}>
                       {({ copied, copy }) => (
                         <Tooltip label="copy" position="bottom">
                           <Button
