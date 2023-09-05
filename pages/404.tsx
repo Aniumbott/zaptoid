@@ -12,7 +12,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { Illustration } from "./components/illustration";
+import Illustration from "./components/illustration";
 import NavBar from "./components/NavBar";
 
 const useStyles = createStyles((theme) => ({

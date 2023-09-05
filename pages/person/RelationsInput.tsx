@@ -26,7 +26,15 @@ export default function RelationsInput(props: {
   const router = useRouter();
   const [persons, setPersons] = useState<Person[]>([personDefault]);
   const [relations, setRelations] = useState<Relation[]>([]);
-  const [inputs, setInputs] = useState<Input[]>(existing);
+  const [inputs, setInputs] = useState<Input[]>(
+    existing || [
+      {
+        name: "",
+        personId: "",
+        personName: "",
+      },
+    ]
+  );
 
   // Event Handlers
   // Fetch all the persons and update the state

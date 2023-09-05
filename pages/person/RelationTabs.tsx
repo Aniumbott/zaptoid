@@ -1,11 +1,12 @@
 // Import Modules
-import { Person, Relation } from "@/prisma/dbTypes";
+import { Person, Relation, relationDefault } from "@/prisma/dbTypes";
 import { Anchor, Badge, Table, Tabs, Title } from "@mantine/core";
 import { IconArrowsSplit2, IconArrowsJoin2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
 // Import Components
 import RelationsInput from "./RelationsInput";
+import { personDefault } from "@/prisma/dbTypes";
 
 // Export Module
 export default function RelationTabs(props: {
@@ -13,17 +14,24 @@ export default function RelationTabs(props: {
   persons: Person[];
   editable: boolean;
 }) {
-  const { relations, persons, editable } = props;
+  const { relations, editable } = props;
+  const persons = props.persons || [personDefault];
   const router = useRouter();
-  
-  // Classification of relations
-  const relationsD = relations.filter(
-    (relation: Relation) => relation.isPersonId === router.query.personId
-  );
-  const relationsI = relations.filter(
-    (relation: Relation) => relation.ofPersonId === router.query.personId
-  );
 
+  // Classification of relations
+  const relationsD =
+    relations ? relations.filter(
+      (relation: Relation) => relation.isPersonId === router.query.personId
+    ) : [relationDefault];
+  const relationsI =
+    relations ? relations.filter(
+      (relation: Relation) => relation.ofPersonId === router.query.personId
+    ) : [relationDefault];
+
+  function getPerson(id: string) {
+    const p = persons ? persons.filter((pe: Person) => pe.id === id)[0] : null;
+    return p ? p.name : "";
+  }
   return (
     <>
       <Tabs orientation="vertical" defaultValue="direct">
@@ -53,9 +61,7 @@ export default function RelationTabs(props: {
                     return {
                       name: relation.name,
                       personId: relation.ofPersonId,
-                      personName: persons.filter(
-                        (person: Person) => person.id === relation.ofPersonId
-                      )[0].name,
+                      personName: getPerson(relation.ofPersonId),
                     };
                   })}
                   variant="direct"
@@ -73,12 +79,7 @@ export default function RelationTabs(props: {
                             router.push(`/person/${relation.ofPersonId}`);
                           }}
                         >
-                          {
-                            persons.filter(
-                              (person: Person) =>
-                                person.id === relation.ofPersonId
-                            )[0].name
-                          }
+                          {getPerson(relation.ofPersonId)}
                         </Anchor>
                       </td>
                     </tr>
@@ -101,9 +102,7 @@ export default function RelationTabs(props: {
                     return {
                       name: relation.name,
                       personId: relation.isPersonId,
-                      personName: persons.filter(
-                        (person: Person) => person.id === relation.isPersonId
-                      )[0].name,
+                      personName: getPerson(relation.isPersonId),
                     };
                   })}
                   variant="indirect"
@@ -118,12 +117,7 @@ export default function RelationTabs(props: {
                             router.push(`/person/${relation.isPersonId}`);
                           }}
                         >
-                          {
-                            persons.filter(
-                              (person: Person) =>
-                                person.id === relation.isPersonId
-                            )[0].name
-                          }
+                          {getPerson(relation.isPersonId)}
                         </Anchor>
                       </td>
                       <td>
