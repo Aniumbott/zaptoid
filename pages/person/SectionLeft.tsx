@@ -21,9 +21,10 @@ type color = "blue" | "red" | "green" | "yellow" | "gray";
 export default function SectionLeft(props: {
   person: Person;
   editable: boolean;
+  form: any;
 }) {
   const person = props.person || personDefault;
-  const { editable } = props;
+  const { editable, form } = props;
 
   return (
     <>
@@ -68,8 +69,7 @@ export default function SectionLeft(props: {
             <Title order={4}> Phone</Title>
             {person.phone.length > 0 ? (
               editable ? (
-                // Phone Input
-                <MultiInput existing={person.phone} />
+                <MultiInput form={form} variant="phones" /> // Phone Input
               ) : (
                 person.phone.map((phone: String, key) => {
                   return (
@@ -101,8 +101,7 @@ export default function SectionLeft(props: {
             <Title order={4}> E-Mail</Title>
             {person.email.length > 0 ? (
               editable ? (
-                // Email Input
-                <MultiInput existing={person.email} />
+                <MultiInput form={form} variant="email" /> // Email Input
               ) : (
                 person.email.map((email: string, key) => {
                   return (

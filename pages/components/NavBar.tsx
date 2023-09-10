@@ -140,7 +140,6 @@ export default function NavBar() {
           `}
         </style>
 
-        {/* <Avatar src={session.user.image} alt="Zaptoid" radius="xl" /> */}
       </Center>
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>
@@ -152,7 +151,9 @@ export default function NavBar() {
           <NavbarLink
             icon={IconLogout}
             onClick={() => {
-              signOut();
+              router.replace("/").then(() => {
+                signOut();
+              });
             }}
             label="Logout"
           />

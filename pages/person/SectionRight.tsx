@@ -1,13 +1,6 @@
 // import Modules
 import { useRouter } from "next/router";
-import { Card, Title, Text, Button, Textarea } from "@mantine/core";
-import {
-  IconArrowNarrowLeft,
-  IconEdit,
-  IconX,
-  IconTrash,
-  IconCheck,
-} from "@tabler/icons-react";
+import { Card, Title, Text, Button, Textarea, Tooltip } from "@mantine/core";
 
 // Import Components
 import { Person, personDefault, Relation } from "@/prisma/dbTypes";
@@ -20,9 +13,10 @@ export default function SectionRight(props: {
   relations: Relation[];
   editable: boolean;
   setEditable: Function;
+  form: any;
 }) {
   const person = props.person || personDefault;
-  const { persons, relations, editable, setEditable } = props;
+  const { persons, relations, editable, setEditable, form } = props;
   const router = useRouter();
 
   return (
@@ -34,9 +28,9 @@ export default function SectionRight(props: {
             {editable ? (
               // Description Input
               <Textarea
-                defaultValue={person.description}
                 placeholder="Anything special?"
                 radius="md"
+                {...form.getInputProps("description")}
               />
             ) : person.description ? (
               <Text>{person.description}</Text>
@@ -53,25 +47,28 @@ export default function SectionRight(props: {
                 relations={relations}
                 persons={persons}
                 editable={editable}
+                form={form}
               />
             </div>
           </div>
           {editable ? (
             <div>
-              <Button
-                variant="light"
-                radius="xl"
-                style={{
-                  position: "absolute",
-                  bottom: "0",
-                  left: "0",
-                  margin: "1rem",
-                }}
-                // onClick={}
-                color="red"
-              >
-                <IconTrash /> Delete
-              </Button>
+              <Tooltip label="Delete this person">
+                <Button
+                  variant="light"
+                  radius="xl"
+                  style={{
+                    position: "absolute",
+                    bottom: "0",
+                    left: "0",
+                    margin: "1rem",
+                  }}
+                  // onClick={}
+                  color="red"
+                >
+                  Delete
+                </Button>
+              </Tooltip>
               <div
                 style={{
                   position: "absolute",
@@ -80,54 +77,62 @@ export default function SectionRight(props: {
                   margin: "1rem",
                 }}
               >
-                <Button
-                  variant="light"
-                  onClick={() => setEditable(!editable)}
-                  radius="xl"
-                  color="red"
-                >
-                  <IconX /> Cancel
-                </Button>
-                <Button
-                  variant="light"
-                  // onClick={}
-                  type="submit"
-                  style={{ marginLeft: "1rem" }}
-                  radius="xl"
-                >
-                  <IconCheck /> Save
-                </Button>
+                <Tooltip label="Cancel the changes">
+                  <Button
+                    variant="light"
+                    onClick={() => setEditable(!editable)}
+                    radius="xl"
+                    color="red"
+                  >
+                    Cancel
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Save the changes">
+                  <Button
+                    variant="light"
+                    // onClick={}
+                    type="submit"
+                    style={{ marginLeft: "1rem" }}
+                    radius="xl"
+                  >
+                    Save
+                  </Button>
+                </Tooltip>
               </div>
             </div>
           ) : (
             <div>
-              <Button
-                variant="subtle"
-                radius="xl"
-                style={{
-                  position: "absolute",
-                  bottom: "0",
-                  left: "0",
-                  margin: "1rem",
-                }}
-                onClick={() => router.back()}
-              >
-                <IconArrowNarrowLeft />
-                Back
-              </Button>
-              <Button
-                variant="subtle"
-                style={{
-                  position: "absolute",
-                  bottom: "0",
-                  right: "0",
-                  margin: "1rem",
-                }}
-                onClick={() => setEditable(!editable)}
-                radius="xl"
-              >
-                <IconEdit /> Edit
-              </Button>
+              <Tooltip label="Go back to the previous page">
+                <Button
+                  variant="subtle"
+                  radius="xl"
+                  style={{
+                    position: "absolute",
+                    bottom: "0",
+                    left: "0",
+                    margin: "1rem",
+                  }}
+                  onClick={() => router.back()}
+                >
+                  Back
+                </Button>
+              </Tooltip>
+              <Tooltip label="Edit this person">
+                <Button
+                  variant="subtle"
+                  style={{
+                    position: "absolute",
+                    bottom: "0",
+                    right: "0",
+                    margin: "1rem",
+                  }}
+                  onClick={() => setEditable(!editable)}
+                  radius="xl"
+                >
+                  {" "}
+                  Edit
+                </Button>
+              </Tooltip>
             </div>
           )}
         </Card>

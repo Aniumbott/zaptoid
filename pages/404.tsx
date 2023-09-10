@@ -1,3 +1,4 @@
+// Import Modules
 import {
   createStyles,
   Container,
@@ -6,14 +7,13 @@ import {
   Button,
   Group,
   rem,
-  Navbar,
 } from "@mantine/core";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+// Import Components
 import Illustration from "./components/illustration";
-import NavBar from "./components/NavBar";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -85,9 +85,9 @@ export default function NothingFoundBackground() {
               align="center"
               className={classes.description}
             >
-              Page you are trying to open does not exist. You may have
-              mistyped the address, or the page has been moved to another URL.
-              If you think this is an error contact support.
+              Page you are trying to open does not exist. You may have mistyped
+              the address, or the page has been moved to another URL. If you
+              think this is an error contact support.
             </Text>
 
             <Group position="center">

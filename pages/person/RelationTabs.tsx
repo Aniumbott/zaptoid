@@ -6,32 +6,35 @@ import { useRouter } from "next/router";
 
 // Import Components
 import RelationsInput from "./RelationsInput";
-import { personDefault } from "@/prisma/dbTypes";
 
 // Export Module
 export default function RelationTabs(props: {
   relations: Relation[];
   persons: Person[];
   editable: boolean;
+  form: any;
 }) {
-  const { relations, editable } = props;
-  const persons = props.persons || [personDefault];
+  const { persons, relations, editable, form } = props;
   const router = useRouter();
 
   // Classification of relations
-  const relationsD =
-    relations ? relations.filter(
-      (relation: Relation) => relation.isPersonId === router.query.personId
-    ) : [relationDefault];
-  const relationsI =
-    relations ? relations.filter(
-      (relation: Relation) => relation.ofPersonId === router.query.personId
-    ) : [relationDefault];
+  const relationsD = relations
+    ? relations.filter(
+        (relation: Relation) => relation.isPersonId === router.query.personId
+      )
+    : [relationDefault];
+  const relationsI = relations
+    ? relations.filter(
+        (relation: Relation) => relation.ofPersonId === router.query.personId
+      )
+    : [relationDefault];
 
+  // Get person name from id
   function getPerson(id: string) {
     const p = persons ? persons.filter((pe: Person) => pe.id === id)[0] : null;
     return p ? p.name : "";
   }
+
   return (
     <>
       <Tabs orientation="vertical" defaultValue="direct">
@@ -55,17 +58,7 @@ export default function RelationTabs(props: {
               className="scrollbar-hidden"
             >
               {editable ? (
-                // Direct Relation Input
-                <RelationsInput
-                  existing={relationsD.map((relation: Relation) => {
-                    return {
-                      name: relation.name,
-                      personId: relation.ofPersonId,
-                      personName: getPerson(relation.ofPersonId),
-                    };
-                  })}
-                  variant="direct"
-                />
+                <RelationsInput form={form} variant="direct" /> // Direct Relation Input
               ) : relationsD ? (
                 relationsD.map((relation: Relation) => {
                   return (
@@ -96,17 +89,7 @@ export default function RelationTabs(props: {
           <Table highlightOnHover striped>
             <tbody>
               {editable ? (
-                // Indirect Relation Input
-                <RelationsInput
-                  existing={relationsI.map((relation: Relation) => {
-                    return {
-                      name: relation.name,
-                      personId: relation.isPersonId,
-                      personName: getPerson(relation.isPersonId),
-                    };
-                  })}
-                  variant="indirect"
-                />
+                <RelationsInput variant="indirect" form={form} /> // Indirect Relation Input
               ) : relationsI ? (
                 relationsI.map((relation: Relation) => {
                   return (

@@ -12,7 +12,7 @@ import Head from "next/head";
 import logo from "../../public/zaptoid.svg";
 
 // Export Module
-function Login() {
+export default function Page() {
   return (
     <>
       <Head>
@@ -107,6 +107,4 @@ function Login() {
       </div>
     </>
   );
-}
-
-export default Login;
+};

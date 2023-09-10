@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 // Import Components
 import Home from "./home/page";
-import Auth from "./login/page";
+import LogIn from "./login/page";
 
 // Extra Functions
 
@@ -168,5 +168,5 @@ export default function Main() {
   if (session && session.user) {
     return <Home persons={persons} />;
   }
-  return <Auth />;
+  return <LogIn />;
 }

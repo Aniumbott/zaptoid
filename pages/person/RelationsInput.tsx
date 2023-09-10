@@ -1,187 +1,205 @@
 // Import Modules
-import { Relation, Person, relationDefault } from "@/prisma/dbTypes";
-import { Button, Select } from "@mantine/core";
-import { IconX, IconPlus } from "@tabler/icons-react";
+import { Relation, Person } from "@/prisma/dbTypes";
+import { Button, Select, ActionIcon } from "@mantine/core";
+import { IconTrash, IconPlus } from "@tabler/icons-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-
-// Import Components
-import { personDefault } from "@/prisma/dbTypes";
-
-// Type Definitions
-type Input = {
-  name: string;
-  personId: string;
-  personName: string;
-};
-
-type Variant = "direct" | "indirect";
+import { useForm } from "@mantine/form";
 
 // Export Module
-export default function RelationsInput(props: {
-  existing: Input[];
-  variant: Variant;
-}) {
-  const { existing, variant } = props;
+export default function RelationsInput(props: { variant: string; form: any }) {
+  const { variant } = props;
   const router = useRouter();
-  const [persons, setPersons] = useState<Person[]>([personDefault]);
-  const [relations, setRelations] = useState<Relation[]>([]);
-  const [inputs, setInputs] = useState<Input[]>(
-    existing || [
-      {
-        name: "",
-        personId: "",
-        personName: "",
+  const form =
+    props.form ||
+    useForm({
+      initialValues: {
+        relationsD: [
+          {
+            name: "",
+            ofPersonId: "",
+          },
+        ],
+        relationsI: [
+          {
+            name: "",
+            isPersonId: "",
+          },
+        ],
       },
-    ]
-  );
+    });
+  const [relations, setRelations] = useState([
+    {
+      name: "",
+      isPersonId: "",
+      ofPersonId: "",
+      isPersonName: "",
+      ofPersonName: "",
+    },
+  ]);
 
   // Event Handlers
   // Fetch all the persons and update the state
   useEffect(() => {
     const getPersons = JSON.parse(localStorage.getItem("persons") || "");
     const getRelations = JSON.parse(localStorage.getItem("relations") || "");
-    if (getPersons) {
-      setPersons(
-        getPersons.filter(
-          (person: Person) => person.id !== router.query.personId
-        )
-      );
-    }
     if (getRelations) {
-      setRelations(getRelations);
+      const mappedRelations = getRelations.map((relation: Relation) => {
+        return {
+          name: relation.name,
+          isPersonId: relation.isPersonId,
+          ofPersonId: relation.ofPersonId,
+          isPersonName:
+            getPersons.filter(
+              (person: Person) => person.id === relation.isPersonId
+            )[0].name || "",
+          ofPersonName:
+            getPersons.filter(
+              (person: Person) => person.id === relation.ofPersonId
+            )[0].name || "",
+        };
+      });
+      setRelations(mappedRelations);
     }
   }, []);
 
   return (
     <>
       {variant === "direct"
-        ? inputs.map((input, key) => {
+        ? form.values.relationsD.map((relation: any, key: any) => {
+            // Direct Relation Input
             return (
               <tr key={key}>
                 <td>
                   <Select
                     placeholder="Pick one"
                     nothingFound="No options"
-                    value={input.name}
-                    data={relations.map((relation: Relation) => relation.name)}
+                    value={relation.name}
+                    data={relations.map((relation: any) => relation.name)}
                     searchable
                     radius="md"
                     key={key}
-                    onChange={(e) => {
-                      const newInputs = [...inputs];
-                      newInputs[key].name = e || "";
-                      setInputs(newInputs);
-                    }}
+                    maxDropdownHeight={280}
+                    {...form.getInputProps(`relationsD.${key}.name`)}
                   />
                 </td>
                 <td>
                   <Select
                     placeholder="Pick one"
                     nothingFound="No options"
-                    value={input.personName}
-                    data={persons.map((person: Person) => {
-                      return person.name;
-                    })}
+                    value={relation.ofPersonId}
+                    data={relations
+                      .filter(
+                        (relation: any) =>
+                          relation.ofPersonId !== router.query.personId
+                      )
+                      .map((relation: any) => {
+                        return {
+                          value: relation.ofPersonId,
+                          label: relation.ofPersonName || "",
+                        };
+                      })}
                     searchable
                     radius="md"
                     key={key}
-                    onChange={(e) => {
-                      const newInputs = [...inputs];
-                      newInputs[key].personName = e || "";
-                      newInputs[key].personId = persons.filter(
-                        (person: Person) => person.name === e
-                      )[0].id;
-                      setInputs(newInputs);
-                    }}
+                    maxDropdownHeight={280}
+                    {...form.getInputProps(`relationsD.${key}.ofPersonId`)}
                   />
                 </td>
                 <td>
-                  <Button
+                  <ActionIcon
                     color="red"
-                    variant="light"
                     key={key}
                     onClick={() => {
-                      const newInputs = [...inputs];
-                      newInputs.splice(key, 1);
-                      setInputs(newInputs);
+                      form.removeListItem("relationsD", key);
                     }}
                     radius="md"
-                    style={{ width: "100%" }}
                   >
-                    <IconX />
-                  </Button>
+                    <IconTrash size="1rem" />
+                  </ActionIcon>
                 </td>
               </tr>
             );
           })
-        : inputs.map((input, key) => {
+        : form.values.relationsI.map((relation: any, key: any) => {
+            // Indirect Relation Input
             return (
               <tr key={key}>
                 <td>
                   <Select
                     placeholder="Pick one"
                     nothingFound="No options"
-                    value={input.personName}
-                    data={persons.map((person: Person) => {
-                      return person.name;
-                    })}
+                    value={relation.isPersonId}
+                    data={relations
+                      .filter(
+                        (relation: any) =>
+                          relation.isPersonId !== router.query.personId
+                      )
+                      .map((relation: any) => {
+                        return {
+                          value: relation.isPersonId,
+                          label: relation.isPersonName || "",
+                        };
+                      })}
                     searchable
                     radius="md"
                     key={key}
-                    onChange={(e) => {
-                      const newInputs = [...inputs];
-                      newInputs[key].personName = e || "";
-                      newInputs[key].personId = persons.filter(
-                        (person: Person) => person.name === e
-                      )[0].id;
-                      setInputs(newInputs);
-                    }}
+                    maxDropdownHeight={280}
+                    {...form.getInputProps(`relationsI.${key}.isPersonId`)}
                   />
                 </td>
                 <td>
                   <Select
                     placeholder="Pick one"
                     nothingFound="No options"
-                    value={input.name}
-                    data={relations.map((relation: Relation) => relation.name)}
+                    value={relation.name}
+                    data={relations.map((relation: any) => relation.name)}
                     searchable
                     radius="md"
                     key={key}
-                    onChange={(e) => {
-                      const newInputs = [...inputs];
-                      newInputs[key].name = e || "";
-                      setInputs(newInputs);
-                    }}
+                    maxDropdownHeight={280}
+                    {...form.getInputProps(`relationsI.${key}.name`)}
                   />
                 </td>
 
                 <td>
-                  <Button
+                  <ActionIcon
                     color="red"
-                    variant="light"
+                    key={key}
                     onClick={() => {
-                      const newInputs = [...inputs];
-                      newInputs.splice(key, 1);
-                      setInputs(newInputs);
+                      form.removeListItem("relationsI", key);
                     }}
                     radius="md"
-                    style={{ width: "100%" }}
                   >
-                    <IconX />
-                  </Button>
+                    <IconTrash size="1rem" />
+                  </ActionIcon>
                 </td>
               </tr>
             );
           })}
       <tr>
-        <td colSpan={3}>
-          <Button
+        <td colSpan={2}>
+          <Button // Add new relation
             onClick={() => {
-              setInputs([
-                ...inputs,
-                { name: "", personId: "", personName: "" },
-              ]);
+              if (variant === "direct") {
+                form.insertListItem(
+                  "relationsD",
+                  {
+                    name: "",
+                    ofPersonId: "",
+                  },
+                  form.values.relationsD.length
+                );
+              } else {
+                form.insertListItem(
+                  "relationsI",
+                  {
+                    name: "",
+                    isPersonId: "",
+                  },
+                  form.values.relationsI.length
+                );
+              }
             }}
             style={{ width: "100%" }}
             variant="light"
