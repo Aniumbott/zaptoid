@@ -7,8 +7,8 @@ import Head from "next/head";
 
 // Import Components
 import NavBar from "../components/NavBar";
-import { PersonCard, PersonCardSkeleton } from "./PersonCard";
-
+import PersonCard from "./PersonCard";
+import PersonCardSkeleton from "./PersonCardSkeleton";
 // Export Module
 export default function Contacts(props: { persons: Person[] }) {
   const { persons } = props;
@@ -23,29 +23,27 @@ export default function Contacts(props: { persons: Person[] }) {
       <div className="home-containeer">
         <Title order={1}>Contacts</Title>
         <div className="cards-conatiner">
-          {
-            persons && persons.length > 1
-              ? persons.map((person: Person) => (
-                  <div
-                    className="card"
-                    key={person.id}
-                    onClick={() => {
-                      router.push(`/person/${person.id}`);
-                    }}
-                  >
-                    {/* small person-card */}
-                    <PersonCard person={person} />
+          {persons && persons.length > 1
+            ? persons.map((person: Person) => (
+                <div
+                  className="card"
+                  key={person.id}
+                  onClick={() => {
+                    router.push(`/person/${person.id}`);
+                  }}
+                >
+                  {/* small person-card */}
+                  <PersonCard person={person} />
+                </div>
+              ))
+            : // <div className="card">
+              Array.from(Array(25).keys()).map((i) => {
+                return (
+                  <div className="card" key={i}>
+                    <PersonCardSkeleton key={i} />
                   </div>
-                ))
-              : // <div className="card">
-                Array.from(Array(25).keys()).map((i) => {
-                  return (
-                    <div className="card" key={i}>
-                      <PersonCardSkeleton key={i} />
-                    </div>
-                  );
-                })
-          }
+                );
+              })}
         </div>
       </div>
       <style jsx>{`

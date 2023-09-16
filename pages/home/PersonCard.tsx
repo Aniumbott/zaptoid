@@ -1,6 +1,6 @@
 // Import Modules
 import { Person } from "@/prisma/dbTypes";
-import { Card, Text, Group, Avatar, Skeleton } from "@mantine/core";
+import { Card, Text, Group, Avatar } from "@mantine/core";
 
 // Custom Types
 const color = [
@@ -20,33 +20,8 @@ const color = [
   "orange",
 ];
 
-function PersonCardSkeleton() {
-  return (
-    <>
-      <Card shadow="sm" padding="xs" radius="xl">
-        <Group position="apart">
-          <Skeleton circle height="2.375rem" />
-          <div className="person-details">
-            <Skeleton height={14} radius="xl" width="80%" />
-            <Skeleton height={10} mt={6} radius="xl" width="50%" />
-          </div>
-        </Group>
-      </Card>
-      <style>
-        {`
-          .person-details {
-            display: flex;
-            flex-direction: column;
-            justify-content: left;
-            width: 10rem;
-          }
-        `}
-      </style>
-    </>
-  );
-}
 // Export Module
-function PersonCard(props: { person: Person }) {
+export default function PersonCard(props: { person: Person }) {
   const person = props.person
     ? props.person
     : ({
@@ -100,4 +75,3 @@ function PersonCard(props: { person: Person }) {
   );
 }
 
-export { PersonCard, PersonCardSkeleton };
