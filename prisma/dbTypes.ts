@@ -2,7 +2,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  phone: String[];
+  phone: string[];
   joined: Date;
 };
 
@@ -18,7 +18,7 @@ type Person = {
   id: string;
   name: string;
   email: string[];
-  phone: String[];
+  phone: string[];
   description: string;
   userId: string;
 };

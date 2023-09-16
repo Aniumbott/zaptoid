@@ -37,29 +37,42 @@ export default function RelationsInput(props: { variant: string; form: any }) {
       ofPersonName: "",
     },
   ]);
+  const [persons, setPersons] = useState<Person[]>([
+    {
+      id: "",
+      name: "",
+      phone: [""],
+      email: [""],
+      description: "",
+      userId: "",
+    },
+  ]);
 
   // Event Handlers
   // Fetch all the persons and update the state
   useEffect(() => {
     const getPersons = JSON.parse(localStorage.getItem("persons") || "");
     const getRelations = JSON.parse(localStorage.getItem("relations") || "");
-    if (getRelations) {
-      const mappedRelations = getRelations.map((relation: Relation) => {
-        return {
-          name: relation.name,
-          isPersonId: relation.isPersonId,
-          ofPersonId: relation.ofPersonId,
-          isPersonName:
-            getPersons.filter(
-              (person: Person) => person.id === relation.isPersonId
-            )[0].name || "",
-          ofPersonName:
-            getPersons.filter(
-              (person: Person) => person.id === relation.ofPersonId
-            )[0].name || "",
-        };
-      });
-      setRelations(mappedRelations);
+    if (getPersons) {
+      setPersons(getPersons);
+      if (getRelations) {
+        const mappedRelations = getRelations.map((relation: Relation) => {
+          return {
+            name: relation.name,
+            isPersonId: relation.isPersonId,
+            ofPersonId: relation.ofPersonId,
+            isPersonName:
+              getPersons.filter(
+                (person: Person) => person.id === relation.isPersonId
+              )[0].name || "",
+            ofPersonName:
+              getPersons.filter(
+                (person: Person) => person.id === relation.ofPersonId
+              )[0].name || "",
+          };
+        });
+        setRelations(mappedRelations);
+      }
     }
   }, []);
 
@@ -75,7 +88,11 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                     placeholder="Pick one"
                     nothingFound="No options"
                     value={relation.name}
-                    data={relations.map((relation: any) => relation.name)}
+                    data={relations
+                      .map((relation: any) => relation.name)
+                      .filter(function (elem, index, self) {
+                        return index === self.indexOf(elem);
+                      })}
                     searchable
                     radius="md"
                     key={key}
@@ -88,17 +105,12 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                     placeholder="Pick one"
                     nothingFound="No options"
                     value={relation.ofPersonId}
-                    data={relations
-                      .filter(
-                        (relation: any) =>
-                          relation.ofPersonId !== router.query.personId
-                      )
-                      .map((relation: any) => {
-                        return {
-                          value: relation.ofPersonId,
-                          label: relation.ofPersonName || "",
-                        };
-                      })}
+                    data={persons.map((person) => {
+                      return {
+                        value: person.id,
+                        label: person.name || "",
+                      };
+                    })}
                     searchable
                     radius="md"
                     key={key}
@@ -130,17 +142,12 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                     placeholder="Pick one"
                     nothingFound="No options"
                     value={relation.isPersonId}
-                    data={relations
-                      .filter(
-                        (relation: any) =>
-                          relation.isPersonId !== router.query.personId
-                      )
-                      .map((relation: any) => {
-                        return {
-                          value: relation.isPersonId,
-                          label: relation.isPersonName || "",
-                        };
-                      })}
+                    data={persons.map((person) => {
+                      return {
+                        value: person.id,
+                        label: person.name || "",
+                      };
+                    })}
                     searchable
                     radius="md"
                     key={key}
@@ -153,7 +160,11 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                     placeholder="Pick one"
                     nothingFound="No options"
                     value={relation.name}
-                    data={relations.map((relation: any) => relation.name)}
+                    data={relations
+                      .map((relation: any) => relation.name)
+                      .filter(function (elem, index, self) {
+                        return index === self.indexOf(elem);
+                      })}
                     searchable
                     radius="md"
                     key={key}

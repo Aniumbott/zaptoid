@@ -7,7 +7,7 @@ import Head from "next/head";
 
 // Import Components
 import NavBar from "../components/NavBar";
-import PersonCard from "./PersonCard";
+import { PersonCard, PersonCardSkeleton } from "./PersonCard";
 
 // Export Module
 export default function Contacts(props: { persons: Person[] }) {
@@ -16,31 +16,36 @@ export default function Contacts(props: { persons: Person[] }) {
 
   return (
     <>
-    <Head>
+      <Head>
         <title>Zaptoid</title>
       </Head>
-    <NavBar/>
+      <NavBar />
       <div className="home-containeer">
         <Title order={1}>Contacts</Title>
         <div className="cards-conatiner">
-          {persons && persons.length > 1 ? (
-            persons.map((person: Person) => (
-              <div
-                className="card"
-                key={person.id}
-                onClick={() => {
-                  router.push(`/person/${person.id}`);
-                }}
-              >
-                {/* small person-card */}
-                <PersonCard person={person} /> 
-              </div>
-            ))
-          ) : (
-            <div className="loader">
-              <Loader color="grape" size="lg" />
-            </div>
-          )}
+          {
+            persons && persons.length > 1
+              ? persons.map((person: Person) => (
+                  <div
+                    className="card"
+                    key={person.id}
+                    onClick={() => {
+                      router.push(`/person/${person.id}`);
+                    }}
+                  >
+                    {/* small person-card */}
+                    <PersonCard person={person} />
+                  </div>
+                ))
+              : // <div className="card">
+                Array.from(Array(25).keys()).map((i) => {
+                  return (
+                    <div className="card" key={i}>
+                      <PersonCardSkeleton key={i} />
+                    </div>
+                  );
+                })
+          }
         </div>
       </div>
       <style jsx>{`
@@ -54,6 +59,7 @@ export default function Contacts(props: { persons: Person[] }) {
           padding: 1rem;
         }
         .cards-conatiner {
+          max-width: calc(100% - 2rem);
           display: flex;
           flex-wrap: wrap;
           justify-content: left;

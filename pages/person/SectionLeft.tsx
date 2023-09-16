@@ -15,7 +15,22 @@ import { Person, personDefault } from "@/prisma/dbTypes";
 import MultiInput from "./MultiInput";
 
 // Custom Types
-type color = "blue" | "red" | "green" | "yellow" | "gray";
+const color = [
+  "dark",
+  "gray",
+  "red",
+  "pink",
+  "grape",
+  "violet",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "green",
+  "lime",
+  "yellow",
+  "orange",
+];
 
 // Export Module
 export default function SectionLeft(props: {
@@ -34,9 +49,13 @@ export default function SectionLeft(props: {
             size={150}
             radius={150}
             variant="filled"
+            alt={`${person.name} avatar`}
             color={
               person.name.split(" ").length > 1
-                ? (person.name.split(" ")[1][0].toLowerCase() as color)
+                ? color[
+                    person.name.split(" ")[0][0].toLowerCase().charCodeAt(0) %
+                      color.length
+                  ]
                 : "blue"
             }
           >
@@ -67,29 +86,27 @@ export default function SectionLeft(props: {
           </div>
           <div className="phone-container">
             <Title order={4}> Phone</Title>
-            {person.phone.length > 0 ? (
-              editable ? (
-                <MultiInput form={form} variant="phones" /> // Phone Input
-              ) : (
-                person.phone.map((phone: String, key) => {
-                  return (
-                    <CopyButton value={`${phone}`} key={key}>
-                      {({ copied, copy }) => (
-                        <Tooltip label="copy" position="bottom">
-                          <Button
-                            color={copied ? "teal" : "primary"}
-                            onClick={copy}
-                            variant="subtle"
-                            compact
-                          >
-                            {copied ? "copied" : `${phone}`}
-                          </Button>
-                        </Tooltip>
-                      )}
-                    </CopyButton>
-                  );
-                })
-              )
+            {editable ? (
+              <MultiInput form={form} variant="phones" /> // Phone Input
+            ) : person.phone.length > 0 ? (
+              person.phone.map((phone: String, key) => {
+                return (
+                  <CopyButton value={`${phone}`} key={key}>
+                    {({ copied, copy }) => (
+                      <Tooltip label="copy" position="bottom">
+                        <Button
+                          color={copied ? "teal" : "primary"}
+                          onClick={copy}
+                          variant="subtle"
+                          compact
+                        >
+                          {copied ? "copied" : `${phone}`}
+                        </Button>
+                      </Tooltip>
+                    )}
+                  </CopyButton>
+                );
+              })
             ) : (
               <Text size="sm" color="dimmed">
                 (none)
@@ -99,29 +116,27 @@ export default function SectionLeft(props: {
 
           <div className="email-container">
             <Title order={4}> E-Mail</Title>
-            {person.email.length > 0 ? (
-              editable ? (
-                <MultiInput form={form} variant="email" /> // Email Input
-              ) : (
-                person.email.map((email: string, key) => {
-                  return (
-                    <CopyButton value={`${email}`} key={key}>
-                      {({ copied, copy }) => (
-                        <Tooltip label="copy" position="bottom">
-                          <Button
-                            color={copied ? "teal" : "primary"}
-                            onClick={copy}
-                            variant="subtle"
-                            compact
-                          >
-                            {copied ? "copied" : `${email}`}
-                          </Button>
-                        </Tooltip>
-                      )}
-                    </CopyButton>
-                  );
-                })
-              )
+            {editable ? (
+              <MultiInput form={form} variant="email" /> // Email Input
+            ) : person.email.length > 0 ? (
+              person.email.map((email: string, key) => {
+                return (
+                  <CopyButton value={`${email}`} key={key}>
+                    {({ copied, copy }) => (
+                      <Tooltip label="copy" position="bottom">
+                        <Button
+                          color={copied ? "teal" : "primary"}
+                          onClick={copy}
+                          variant="subtle"
+                          compact
+                        >
+                          {copied ? "copied" : `${email}`}
+                        </Button>
+                      </Tooltip>
+                    )}
+                  </CopyButton>
+                );
+              })
             ) : (
               <Text size="sm" color="dimmed">
                 (none)

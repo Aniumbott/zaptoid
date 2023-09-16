@@ -1,12 +1,52 @@
 // Import Modules
 import { Person } from "@/prisma/dbTypes";
-import { Card, Text, Group, Avatar } from "@mantine/core";
+import { Card, Text, Group, Avatar, Skeleton } from "@mantine/core";
 
 // Custom Types
-type color = "blue" | "red" | "green" | "yellow" | "gray";
+const color = [
+  "dark",
+  "gray",
+  "red",
+  "pink",
+  "grape",
+  "violet",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "green",
+  "lime",
+  "yellow",
+  "orange",
+];
 
+function PersonCardSkeleton() {
+  return (
+    <>
+      <Card shadow="sm" padding="xs" radius="xl">
+        <Group position="apart">
+          <Skeleton circle height="2.375rem" />
+          <div className="person-details">
+            <Skeleton height={14} radius="xl" width="80%" />
+            <Skeleton height={10} mt={6} radius="xl" width="50%" />
+          </div>
+        </Group>
+      </Card>
+      <style>
+        {`
+          .person-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: left;
+            width: 10rem;
+          }
+        `}
+      </style>
+    </>
+  );
+}
 // Export Module
-export default function PersonCard(props: { person: Person }) {
+function PersonCard(props: { person: Person }) {
   const person = props.person
     ? props.person
     : ({
@@ -20,18 +60,17 @@ export default function PersonCard(props: { person: Person }) {
 
   return (
     <>
-      <Card
-        shadow="sm"
-        padding="xs"
-        radius="xl"
-      >
+      <Card shadow="sm" padding="xs" radius="xl">
         <Group position="apart">
           <Avatar
             size="md"
             radius="xl"
             color={
               person.name.split(" ").length > 1
-                ? (person.name.split(" ")[1][0].toLowerCase() as color)
+                ? color[
+                    person.name.split(" ")[0][0].toLowerCase().charCodeAt(0) %
+                      color.length
+                  ]
                 : "blue"
             }
           >
@@ -55,19 +94,10 @@ export default function PersonCard(props: { person: Person }) {
       justify-content: left;
       width: 10rem;
     }
-    .relations {
-      display: flex;
-      flex-direction: row;
-      justify-content: left;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-    .direct-relation{
-      max-width: 5rem;
-      overflow: hidden;
-    }
     `}
       </style>
     </>
   );
 }
+
+export { PersonCard, PersonCardSkeleton };
