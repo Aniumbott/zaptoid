@@ -1,14 +1,14 @@
 // Import Modules
 import { useRouter } from "next/router";
 import { Title } from "@mantine/core";
-import { Loader } from "@mantine/core";
-import { Person } from "@/prisma/dbTypes";
 import Head from "next/head";
 
 // Import Components
 import NavBar from "../components/NavBar";
 import PersonCard from "./PersonCard";
+import { Person } from "@/prisma/types";
 import PersonCardSkeleton from "./PersonCardSkeleton";
+
 // Export Module
 export default function Contacts(props: { persons: Person[] }) {
   const { persons } = props;

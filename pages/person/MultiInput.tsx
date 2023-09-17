@@ -19,7 +19,7 @@ export default function MultiInput(props: { form: any; variant: string }) {
       <div className="multi-input-container">
         {variant === "phones" ? (
           <>
-            {form.values.phones.map((input: any, key: any) => {
+            {form.values.phones.map((input: string, key: string) => {
               //Input for phone numbers
               return (
                 <div className="input-container" key={key}>
@@ -55,7 +55,7 @@ export default function MultiInput(props: { form: any; variant: string }) {
           </>
         ) : (
           <>
-            {form.values.emails.map((input: any, key: any) => {
+            {form.values.emails.map((input: string, key: string) => {
               // Input for email ids
               return (
                 <div className="input-container" key={key}>

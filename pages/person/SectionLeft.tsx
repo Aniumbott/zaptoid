@@ -11,26 +11,8 @@ import {
 import { TextInput } from "@mantine/core";
 
 // Import Components
-import { Person, personDefault } from "@/prisma/dbTypes";
+import { Person, personDefault, color } from "@/prisma/types";
 import MultiInput from "./MultiInput";
-
-// Custom Types
-const color = [
-  "dark",
-  "gray",
-  "red",
-  "pink",
-  "grape",
-  "violet",
-  "indigo",
-  "blue",
-  "cyan",
-  "teal",
-  "green",
-  "lime",
-  "yellow",
-  "orange",
-];
 
 // Export Module
 export default function SectionLeft(props: {

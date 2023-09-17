@@ -1,5 +1,11 @@
 // Import Modules
-import { Person, Relation, relationDefault } from "@/prisma/dbTypes";
+import {
+  CurrentUser,
+  currentUserDefault,
+  Person,
+  Relation,
+  relationDefault,
+} from "@/prisma/types";
 import { Anchor, Badge, Table, Tabs, Title } from "@mantine/core";
 import { IconArrowsSplit2, IconArrowsJoin2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
@@ -9,29 +15,27 @@ import RelationsInput from "./RelationsInput";
 
 // Export Module
 export default function RelationTabs(props: {
-  relations: Relation[];
-  persons: Person[];
+  currentUser: CurrentUser;
   editable: boolean;
   form: any;
 }) {
-  const { persons, relations, editable, form } = props;
+  const { editable, form } = props;
+  const currentUser = props.currentUser || currentUserDefault;
   const router = useRouter();
 
   // Classification of relations
-  const relationsD = relations
-    ? relations.filter(
-        (relation: Relation) => relation.isPersonId === router.query.personId
-      )
-    : [relationDefault];
-  const relationsI = relations
-    ? relations.filter(
-        (relation: Relation) => relation.ofPersonId === router.query.personId
-      )
-    : [relationDefault];
+  const relationsD = currentUser.relations.filter(
+    (relation: Relation) => relation.isPersonId === router.query.personId
+  ) || [relationDefault];
+  const relationsI = currentUser.relations.filter(
+    (relation: Relation) => relation.ofPersonId === router.query.personId
+  ) || [relationDefault];
 
   // Get person name from id
   function getPerson(id: string) {
-    const p = persons ? persons.filter((pe: Person) => pe.id === id)[0] : null;
+    const p = currentUser.persons
+      ? currentUser.persons.filter((pe: Person) => pe.id === id)[0]
+      : null;
     return p ? p.name : "";
   }
 
@@ -53,12 +57,14 @@ export default function RelationTabs(props: {
               style={{
                 width: "100%",
                 height: "100%",
-                overflowY: "scroll",
               }}
-              className="scrollbar-hidden"
             >
               {editable ? (
-                <RelationsInput form={form} variant="direct" /> // Direct Relation Input
+                <RelationsInput
+                  form={form}
+                  variant="direct"
+                  currentUser={currentUser}
+                /> // Direct Relation Input
               ) : relationsD ? (
                 relationsD.map((relation: Relation) => {
                   return (
@@ -89,7 +95,11 @@ export default function RelationTabs(props: {
           <Table highlightOnHover striped>
             <tbody>
               {editable ? (
-                <RelationsInput variant="indirect" form={form} /> // Indirect Relation Input
+                <RelationsInput
+                  variant="indirect"
+                  form={form}
+                  currentUser={currentUser}
+                /> // Indirect Relation Input
               ) : relationsI ? (
                 relationsI.map((relation: Relation) => {
                   return (

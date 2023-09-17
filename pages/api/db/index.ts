@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getUser } from "./handleUser";
 import { getAllPersons, createPerson } from "./handlePerson";
+import { getRoles } from "./handleRoles";
 import { getRelations } from "./handleRelation";
 
 (BigInt.prototype as any).toJSON = function () {
@@ -25,6 +26,8 @@ export default async function handleDbRequest( // Handle POST request
           return await getAllPersons(post, res);
         case "createUserPerson": // Handle userperson objrct
           return await createPerson(post, res, true);
+        case "getRoles":
+          return await getRoles(post, res);
         case "getRelations": // Handle =to collect all the specific relations
           return await getRelations(post, res);
         default:

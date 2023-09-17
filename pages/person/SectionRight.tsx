@@ -3,26 +3,31 @@ import { useRouter } from "next/router";
 import { Card, Title, Text, Button, Textarea, Tooltip } from "@mantine/core";
 
 // Import Components
-import { Person, personDefault, Relation } from "@/prisma/dbTypes";
+import {
+  CurrentUser,
+  currentUserDefault,
+  Person,
+  personDefault,
+} from "@/prisma/types";
 import RelationTabs from "./RelationTabs";
 
 // Export Module
 export default function SectionRight(props: {
   person: Person;
-  persons: Person[];
-  relations: Relation[];
+  currentUser: CurrentUser;
   editable: boolean;
   setEditable: Function;
   form: any;
 }) {
+  const { editable, setEditable, form } = props;
+  const currentUser = props.currentUser || currentUserDefault;
   const person = props.person || personDefault;
-  const { persons, relations, editable, setEditable, form } = props;
   const router = useRouter();
 
   return (
     <>
       <div className="section-right">
-        <Card style={{ width: "100%", height: "100%" }}>
+        <Card style={{ width: "100%" }}>
           <div className="description-container">
             <Title order={4}>Description</Title>
             {editable ? (
@@ -40,101 +45,114 @@ export default function SectionRight(props: {
               </Text>
             )}
           </div>
+        </Card>
+
+        <Card
+          style={{
+            marginTop: "1rem",
+            width: "100%",
+            height: "100%",
+            overflowY: "scroll",
+          }}
+          className="scrollbar-hidden"
+        >
           <div className="relations-container">
             <Title order={4}>Relations</Title>
             <div className="relation-tabs">
               <RelationTabs
-                relations={relations}
-                persons={persons}
+                currentUser={currentUser}
                 editable={editable}
                 form={form}
               />
             </div>
           </div>
-          {editable ? (
-            <div>
-              <Tooltip label="Delete this person">
-                <Button
-                  variant="light"
-                  radius="xl"
-                  style={{
-                    position: "absolute",
-                    bottom: "0",
-                    left: "0",
-                    margin: "1rem",
-                  }}
-                  // onClick={}
-                  color="red"
-                >
-                  Delete
-                </Button>
-              </Tooltip>
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "0",
-                  right: "0",
-                  margin: "1rem",
-                }}
-              >
-                <Tooltip label="Cancel the changes">
+
+          <div className="buttons">
+            {editable ? (
+              <>
+                <Tooltip label="Delete this person">
                   <Button
                     variant="light"
-                    onClick={() => setEditable(!editable)}
                     radius="xl"
+                    style={{
+                      position: "absolute",
+                      bottom: "0",
+                      left: "0",
+                      margin: "1rem",
+                    }}
+                    // onClick={}
                     color="red"
                   >
-                    Cancel
+                    Delete
                   </Button>
                 </Tooltip>
-                <Tooltip label="Save the changes">
-                  <Button
-                    variant="light"
-                    // onClick={}
-                    type="submit"
-                    style={{ marginLeft: "1rem" }}
-                    radius="xl"
-                  >
-                    Save
-                  </Button>
-                </Tooltip>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <Tooltip label="Go back to the previous page">
-                <Button
-                  variant="subtle"
-                  radius="xl"
-                  style={{
-                    position: "absolute",
-                    bottom: "0",
-                    left: "0",
-                    margin: "1rem",
-                  }}
-                  onClick={() => router.back()}
-                >
-                  Back
-                </Button>
-              </Tooltip>
-              <Tooltip label="Edit this person">
-                <Button
-                  variant="subtle"
+                <div
                   style={{
                     position: "absolute",
                     bottom: "0",
                     right: "0",
                     margin: "1rem",
                   }}
-                  onClick={() => setEditable(!editable)}
-                  radius="xl"
                 >
-                  {" "}
-                  Edit
-                </Button>
-              </Tooltip>
-            </div>
-          )}
+                  <Tooltip label="Cancel the changes">
+                    <Button
+                      variant="light"
+                      onClick={() => setEditable(!editable)}
+                      radius="xl"
+                      color="red"
+                    >
+                      Cancel
+                    </Button>
+                  </Tooltip>
+                  <Tooltip label="Save the changes">
+                    <Button
+                      variant="light"
+                      // onClick={}
+                      type="submit"
+                      style={{ marginLeft: "1rem" }}
+                      radius="xl"
+                    >
+                      Save
+                    </Button>
+                  </Tooltip>
+                </div>
+              </>
+            ) : (
+              <>
+                <Tooltip label="Go back to the previous page">
+                  <Button
+                    variant="subtle"
+                    radius="xl"
+                    style={{
+                      position: "absolute",
+                      bottom: "0",
+                      left: "0",
+                      margin: "1rem",
+                    }}
+                    onClick={() => router.back()}
+                  >
+                    Back
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Edit this person">
+                  <Button
+                    variant="subtle"
+                    style={{
+                      position: "absolute",
+                      bottom: "0",
+                      right: "0",
+                      margin: "1rem",
+                    }}
+                    onClick={() => setEditable(!editable)}
+                    radius="xl"
+                  >
+                    {" "}
+                    Edit
+                  </Button>
+                </Tooltip>
+              </>
+            )}
+          </div>
         </Card>
       </div>
       <style jsx>{`
@@ -144,7 +162,7 @@ export default function SectionRight(props: {
           justify-content: space-between;
           align-items: center;
           width: 30rem;
-          height: 100%;
+          height: auto;
           padding: 1.5rem;
           width: 100%;
         }
@@ -152,10 +170,19 @@ export default function SectionRight(props: {
         .description-container,
         .relations-container {
           margin-bottom: 1rem;
+          height: auto;
         }
 
         .relation-tabs {
           margin-top: 1rem;
+        }
+
+        .buttons {
+          margin-top: 1rem;
+          height: 4rem;
+          width: 100%;
+          position: relative;
+          bottom: 0;
         }
       `}</style>
     </>

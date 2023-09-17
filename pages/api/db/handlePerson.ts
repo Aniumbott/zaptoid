@@ -36,7 +36,7 @@ async function createPerson(
     if (!dbData) {
       const dbData = await prisma.person.create({
         data: {
-          name: isUser ? "self" : post.name,
+          name: isUser ? "you" : post.name,
           email: post.email,
           userId: post.userId,
         },

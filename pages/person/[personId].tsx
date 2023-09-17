@@ -9,11 +9,12 @@ import { useForm } from "@mantine/form";
 
 // Import Components
 import {
+  CurrentUser,
+  currentUserDefault,
   Person,
   personDefault,
   Relation,
-  relationDefault,
-} from "@/prisma/dbTypes";
+} from "@/prisma/types";
 import wallpaper from "../../public/profile-bg.svg";
 import SectionLeft from "./SectionLeft";
 import SectionRight from "./SectionRight";
@@ -21,9 +22,9 @@ import NavBar from "../components/NavBar";
 
 // Export Module
 export default function Page() {
-  const [persons, setPersons] = useState<Person[]>([personDefault]);
-  const [relations, setRelations] = useState<Relation[]>([relationDefault]);
-  const [person, setPerson] = useState(personDefault);
+  const [currentUser, setCurrentUser] =
+    useState<CurrentUser>(currentUserDefault);
+  const [person, setPerson] = useState<Person>(personDefault);
   const [editable, setEditable] = useState(false);
   const router = useRouter();
 
@@ -34,8 +35,8 @@ export default function Page() {
       phones: [{ number: "9999999999" }],
       emails: [{ email: "xyz@gmail.com" }],
       description: "",
-      relationsD: [{ name: "xyz", ofPersonId: "2" }],
-      relationsI: [{ name: "xyz", isPersonId: "2" }],
+      relationsD: [{ roleId: "xyz", ofPersonId: "2" }],
+      relationsI: [{ roleId: "xyz", isPersonId: "2" }],
     },
     validate: {
       name: (value) => (value.trim().length >= 3 ? null : "Name is too short"), // Name should be atleast 3 characters long
@@ -55,64 +56,22 @@ export default function Page() {
             : "Invalid Email",
       },
       relationsD: {
-        name: (value: String) => (value ? null : "Select a Relation"),
+        roleId: (value: String) => (value ? null : "Select a Role"),
         ofPersonId: (value: String) => (value ? null : "Select a Person"), // At least one person should be selected
       },
       relationsI: {
-        name: (value: String) => (value ? null : "Select a Relation"),
+        roleId: (value: String) => (value ? null : "Select a Role"),
         isPersonId: (value: String) => (value ? null : "Select a Person"), // At least one person should be selected
       },
     },
   });
 
-  // Update the form values when person is updated
-  useEffect(() => {
-    form.setValues({
-      name: person.name,
-      phones: [
-        ...person.phone.map((phone: String) => ({ number: phone.toString() })),
-      ],
-      emails: [
-        ...person.email.map((email: String) => ({ email: email.toString() })),
-      ],
-      description: person.description,
-      relationsD:
-        relations
-          .filter(
-            (relation: Relation) =>
-              relation.isPersonId === router.query.personId
-          )
-          .map((relation: Relation) => {
-            return {
-              name: relation.name,
-              ofPersonId: relation.ofPersonId,
-            };
-          }) || [],
-      relationsI:
-        relations
-          .filter(
-            (relation: Relation) =>
-              relation.ofPersonId === router.query.personId
-          )
-          .map((relation: Relation) => {
-            return {
-              name: relation.name,
-              isPersonId: relation.isPersonId,
-            };
-          }) || [],
-    });
-  }, [person, editable]);
-
   // Event Handlers
   // Fetch all the persons and update the state
   useEffect(() => {
-    const getPersons = JSON.parse(localStorage.getItem("persons") || "");
-    const getRelations = JSON.parse(localStorage.getItem("relations") || "");
-    if (getPersons) {
-      setPersons(getPersons);
-    }
-    if (getRelations) {
-      setRelations(getRelations);
+    const currentUser = localStorage.getItem("currentUser");
+    if (currentUser) {
+      setCurrentUser(JSON.parse(currentUser));
     }
   }, []);
 
@@ -120,7 +79,7 @@ export default function Page() {
   useEffect(() => {
     // console.log(persons);
     if (router.query.personId) {
-      const getPerson = persons.filter(
+      const getPerson = currentUser.persons.filter(
         (p: Person) => p.id == router.query.personId
       )[0];
 
@@ -129,11 +88,54 @@ export default function Page() {
       }
       // console.log("person", getPerson);
     }
-  }, [router.query.personId, persons]);
+  }, [router.query.personId, currentUser]);
 
+  // Update the form values when person is updated
   useEffect(() => {
-    console.log(form.values);
-  }, [form.values]);
+    form.setValues({
+      name: person.name,
+      phones: [
+        ...person.phone.map((phone: String) => ({
+          number: phone.toString(),
+        })),
+      ],
+      emails: [
+        ...person.email.map((email: String) => ({ email: email.toString() })),
+      ],
+      description: person.description,
+      relationsD:
+        currentUser.relations
+          .filter(
+            (relation: Relation) =>
+              relation.isPersonId === router.query.personId
+          )
+          .map(
+            (relation: Relation) =>
+              ({
+                roleId: relation.roleId,
+                ofPersonId: relation.ofPersonId,
+              } as Relation)
+          ) || form.values.relationsD,
+      relationsI:
+        currentUser.relations
+          .filter(
+            (relation: Relation) =>
+              relation.ofPersonId === router.query.personId
+          )
+          .map(
+            (relation: Relation) =>
+              ({
+                roleId: relation.roleId,
+                isPersonId: relation.isPersonId,
+              } as Relation)
+          ) || form.values.relationsI,
+    });
+  }, [person, editable]);
+
+  // useEffect(() => {
+  //   console.log(form.values);
+  //   console.log(form.errors);
+  // }, [form.values]);
 
   return (
     <>
@@ -156,8 +158,7 @@ export default function Page() {
               <Divider orientation="vertical" />
               <SectionRight
                 person={person}
-                persons={persons}
-                relations={relations}
+                currentUser={currentUser}
                 editable={editable}
                 setEditable={setEditable}
                 form={form}

@@ -1,24 +1,8 @@
 // Import Modules
-import { Person } from "@/prisma/dbTypes";
 import { Card, Text, Group, Avatar } from "@mantine/core";
 
-// Custom Types
-const color = [
-  "dark",
-  "gray",
-  "red",
-  "pink",
-  "grape",
-  "violet",
-  "indigo",
-  "blue",
-  "cyan",
-  "teal",
-  "green",
-  "lime",
-  "yellow",
-  "orange",
-];
+// Import Components
+import { Person, color } from "@/prisma/types";
 
 // Export Module
 export default function PersonCard(props: { person: Person }) {
@@ -74,4 +58,3 @@ export default function PersonCard(props: { person: Person }) {
     </>
   );
 }
-

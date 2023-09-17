@@ -1,85 +1,29 @@
 // Import Modules
-import { Relation, Person } from "@/prisma/dbTypes";
+import { CurrentUser, currentUserDefault, Role } from "@/prisma/types";
 import { Button, Select, ActionIcon } from "@mantine/core";
 import { IconTrash, IconPlus } from "@tabler/icons-react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
 
 // Export Module
-export default function RelationsInput(props: { variant: string; form: any }) {
+export default function RelationsInput(props: {
+  variant: string;
+  form: any;
+  currentUser: CurrentUser;
+}) {
   const { variant } = props;
-  const router = useRouter();
+  const currentUser = props.currentUser || currentUserDefault; // Current user object
   const form =
     props.form ||
     useForm({
       initialValues: {
-        relationsD: [
-          {
-            name: "",
-            ofPersonId: "",
-          },
-        ],
-        relationsI: [
-          {
-            name: "",
-            isPersonId: "",
-          },
-        ],
+        relationsD: [{ roleId: "", ofPersonId: "" }],
+        relationsI: [{ isPersonId: "", roleId: "" }],
       },
-    });
-  const [relations, setRelations] = useState([
-    {
-      name: "",
-      isPersonId: "",
-      ofPersonId: "",
-      isPersonName: "",
-      ofPersonName: "",
-    },
-  ]);
-  const [persons, setPersons] = useState<Person[]>([
-    {
-      id: "",
-      name: "",
-      phone: [""],
-      email: [""],
-      description: "",
-      userId: "",
-    },
-  ]);
-
-  // Event Handlers
-  // Fetch all the persons and update the state
-  useEffect(() => {
-    const getPersons = JSON.parse(localStorage.getItem("persons") || "");
-    const getRelations = JSON.parse(localStorage.getItem("relations") || "");
-    if (getPersons) {
-      setPersons(getPersons);
-      if (getRelations) {
-        const mappedRelations = getRelations.map((relation: Relation) => {
-          return {
-            name: relation.name,
-            isPersonId: relation.isPersonId,
-            ofPersonId: relation.ofPersonId,
-            isPersonName:
-              getPersons.filter(
-                (person: Person) => person.id === relation.isPersonId
-              )[0].name || "",
-            ofPersonName:
-              getPersons.filter(
-                (person: Person) => person.id === relation.ofPersonId
-              )[0].name || "",
-          };
-        });
-        setRelations(mappedRelations);
-      }
-    }
-  }, []);
-
+    }); // Form object
   return (
     <>
       {variant === "direct"
-        ? form.values.relationsD.map((relation: any, key: any) => {
+        ? form.values.relationsD.map((relation: any, key: string) => {
             // Direct Relation Input
             return (
               <tr key={key}>
@@ -87,17 +31,18 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                   <Select
                     placeholder="Pick one"
                     nothingFound="No options"
-                    value={relation.name}
-                    data={relations
-                      .map((relation: any) => relation.name)
-                      .filter(function (elem, index, self) {
-                        return index === self.indexOf(elem);
-                      })}
+                    value={relation.roleId}
+                    data={currentUser.roles.map((role: Role) => {
+                      return {
+                        value: role.id || "xyz",
+                        label: role.name || "",
+                      };
+                    })}
                     searchable
                     radius="md"
                     key={key}
                     maxDropdownHeight={280}
-                    {...form.getInputProps(`relationsD.${key}.name`)}
+                    {...form.getInputProps(`relationsD.${key}.roleId`)}
                   />
                 </td>
                 <td>
@@ -105,12 +50,14 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                     placeholder="Pick one"
                     nothingFound="No options"
                     value={relation.ofPersonId}
-                    data={persons.map((person) => {
-                      return {
-                        value: person.id,
-                        label: person.name || "",
-                      };
-                    })}
+                    data={
+                      currentUser.persons.map((person) => {
+                        return {
+                          value: person.id || "xyz",
+                          label: person.name || "",
+                        };
+                      }) || []
+                    }
                     searchable
                     radius="md"
                     key={key}
@@ -133,8 +80,8 @@ export default function RelationsInput(props: { variant: string; form: any }) {
               </tr>
             );
           })
-        : form.values.relationsI.map((relation: any, key: any) => {
-            // Indirect Relation Input
+        : form.values.relationsI.map((relation: any, key: string) => {
+            // Direct Relation Input
             return (
               <tr key={key}>
                 <td>
@@ -142,12 +89,14 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                     placeholder="Pick one"
                     nothingFound="No options"
                     value={relation.isPersonId}
-                    data={persons.map((person) => {
-                      return {
-                        value: person.id,
-                        label: person.name || "",
-                      };
-                    })}
+                    data={
+                      currentUser.persons.map((person) => {
+                        return {
+                          value: person.id || "xyz",
+                          label: person.name || "",
+                        };
+                      }) || []
+                    }
                     searchable
                     radius="md"
                     key={key}
@@ -159,20 +108,20 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                   <Select
                     placeholder="Pick one"
                     nothingFound="No options"
-                    value={relation.name}
-                    data={relations
-                      .map((relation: any) => relation.name)
-                      .filter(function (elem, index, self) {
-                        return index === self.indexOf(elem);
-                      })}
+                    value={relation.roleId}
+                    data={currentUser.roles.map((role: Role) => {
+                      return {
+                        value: role.id || "xyz",
+                        label: role.name || "",
+                      };
+                    })}
                     searchable
                     radius="md"
                     key={key}
                     maxDropdownHeight={280}
-                    {...form.getInputProps(`relationsI.${key}.name`)}
+                    {...form.getInputProps(`relationsI.${key}.roleId`)}
                   />
                 </td>
-
                 <td>
                   <ActionIcon
                     color="red"
@@ -188,6 +137,7 @@ export default function RelationsInput(props: { variant: string; form: any }) {
               </tr>
             );
           })}
+
       <tr>
         <td colSpan={2}>
           <Button // Add new relation
@@ -196,7 +146,7 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                 form.insertListItem(
                   "relationsD",
                   {
-                    name: "",
+                    roleId: "",
                     ofPersonId: "",
                   },
                   form.values.relationsD.length
@@ -205,7 +155,7 @@ export default function RelationsInput(props: { variant: string; form: any }) {
                 form.insertListItem(
                   "relationsI",
                   {
-                    name: "",
+                    roleId: "",
                     isPersonId: "",
                   },
                   form.values.relationsI.length
