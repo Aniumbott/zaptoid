@@ -134,7 +134,7 @@ export default function Page() {
         // Conseutive API calls
         Promise.all(
           addable?.map((relation: Relation) =>
-            updateRelation({ task: "add", ...relation })
+            updateRelation({ task: "add", ...relation, userId: currentUser.id })
           )
         ).then(() => {
           Promise.all(
