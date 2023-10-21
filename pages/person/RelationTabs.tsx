@@ -5,8 +5,8 @@ import {
   Person,
   Relation,
   relationDefault,
-} from "@/prisma/types";
-import { Anchor, Badge, Table, Tabs, Title } from "@mantine/core";
+} from "@/src/types";
+import { Anchor, Badge, Table, Tabs, Title, Text } from "@mantine/core";
 import { IconArrowsSplit2, IconArrowsJoin2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
@@ -24,10 +24,10 @@ export default function RelationTabs(props: {
   const router = useRouter();
 
   // Classification of relations
-  const relationsD = currentUser.relations.filter(
+  const relationsD = currentUser.relations?.filter(
     (relation: Relation) => relation.isPersonId === router.query.personId
   ) || [relationDefault];
-  const relationsI = currentUser.relations.filter(
+  const relationsI = currentUser.relations?.filter(
     (relation: Relation) => relation.ofPersonId === router.query.personId
   ) || [relationDefault];
 
@@ -67,19 +67,24 @@ export default function RelationTabs(props: {
                 /> // Direct Relation Input
               ) : relationsD ? (
                 relationsD.map((relation: Relation) => {
+                  const person = getPerson(relation.ofPersonId);
                   return (
                     <tr key={relation.id}>
                       <td>
                         <Badge color="green">{relation.name}</Badge>
                       </td>
                       <td>
-                        <Anchor
-                          onClick={() => {
-                            router.push(`/person/${relation.ofPersonId}`);
-                          }}
-                        >
-                          {getPerson(relation.ofPersonId)}
-                        </Anchor>
+                        {person === "you" ? (
+                          <Text> {person} </Text>
+                        ) : (
+                          <Anchor
+                            onClick={() => {
+                              router.push(`/person/${relation.ofPersonId}`);
+                            }}
+                          >
+                            {person}
+                          </Anchor>
+                        )}
                       </td>
                     </tr>
                   );
@@ -102,16 +107,21 @@ export default function RelationTabs(props: {
                 /> // Indirect Relation Input
               ) : relationsI ? (
                 relationsI.map((relation: Relation) => {
+                  const person = getPerson(relation.isPersonId);
                   return (
                     <tr key={relation.id}>
                       <td>
-                        <Anchor
-                          onClick={() => {
-                            router.push(`/person/${relation.isPersonId}`);
-                          }}
-                        >
-                          {getPerson(relation.isPersonId)}
-                        </Anchor>
+                        {person === "you" ? (
+                          <Text> {person} </Text>
+                        ) : (
+                          <Anchor
+                            onClick={() => {
+                              router.push(`/person/${relation.isPersonId}`);
+                            }}
+                          >
+                            {getPerson(relation.isPersonId)}
+                          </Anchor>
+                        )}
                       </td>
                       <td>
                         <Badge color="blue">{relation.name}</Badge>

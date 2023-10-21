@@ -18,6 +18,26 @@ JSON.stringify(
 
 // Handle functions
 
+// Get All persons
+async function getAllPersons(post: dbProps, res: NextApiResponse) {
+  try {
+    const dbData = await prisma.person.findMany({
+      where: {
+        userId: post.userId,
+      },
+    });
+    if (!dbData) {
+      return res.status(400).json({ msg: "No person found." });
+    }
+    return res
+      .status(200)
+      .json({ dbData, msg: "Persons collected successfully." });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ msg: "Something went wrong." });
+  }
+}
+
 // Create person
 async function createPerson(
   post: dbProps,
@@ -51,12 +71,19 @@ async function createPerson(
   }
 }
 
-// Get All persons
-async function getAllPersons(post: dbProps, res: NextApiResponse) {
+// Update existing person
+async function updatePerson(post: any, res: NextApiResponse) {
   try {
-    const dbData = await prisma.person.findMany({
+    const dbData = await prisma.person.update({
       where: {
+        id: post.id,
         userId: post.userId,
+      },
+      data: {
+        name: post.name,
+        email: post.emails,
+        phone: post.phones,
+        description: post.description,
       },
     });
     if (!dbData) {
@@ -64,11 +91,11 @@ async function getAllPersons(post: dbProps, res: NextApiResponse) {
     }
     return res
       .status(200)
-      .json({ dbData, msg: "Persons collected successfully." });
+      .json({ dbData, msg: "Person updated successfully." });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ msg: "Something went wrong." });
   }
 }
 
-export { createPerson, getAllPersons };
+export { createPerson, updatePerson, getAllPersons };

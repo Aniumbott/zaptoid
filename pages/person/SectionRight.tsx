@@ -8,7 +8,7 @@ import {
   currentUserDefault,
   Person,
   personDefault,
-} from "@/prisma/types";
+} from "@/src/types";
 import RelationTabs from "./RelationTabs";
 
 // Export Module
@@ -17,9 +17,10 @@ export default function SectionRight(props: {
   currentUser: CurrentUser;
   editable: boolean;
   setEditable: Function;
+  loading: boolean;
   form: any;
 }) {
-  const { editable, setEditable, form } = props;
+  const { editable, setEditable, loading, form } = props;
   const currentUser = props.currentUser || currentUserDefault;
   const person = props.person || personDefault;
   const router = useRouter();
@@ -75,9 +76,6 @@ export default function SectionRight(props: {
                     variant="light"
                     radius="xl"
                     style={{
-                      position: "absolute",
-                      bottom: "0",
-                      left: "0",
                       margin: "1rem",
                     }}
                     // onClick={}
@@ -88,9 +86,6 @@ export default function SectionRight(props: {
                 </Tooltip>
                 <div
                   style={{
-                    position: "absolute",
-                    bottom: "0",
-                    right: "0",
                     margin: "1rem",
                   }}
                 >
@@ -112,7 +107,7 @@ export default function SectionRight(props: {
                       style={{ marginLeft: "1rem" }}
                       radius="xl"
                     >
-                      Save
+                      {loading ? "Updating..." : "Save"}
                     </Button>
                   </Tooltip>
                 </div>
@@ -124,9 +119,6 @@ export default function SectionRight(props: {
                     variant="subtle"
                     radius="xl"
                     style={{
-                      position: "absolute",
-                      bottom: "0",
-                      left: "0",
                       margin: "1rem",
                     }}
                     onClick={() => router.back()}
@@ -138,9 +130,6 @@ export default function SectionRight(props: {
                   <Button
                     variant="subtle"
                     style={{
-                      position: "absolute",
-                      bottom: "0",
-                      right: "0",
                       margin: "1rem",
                     }}
                     onClick={() => setEditable(!editable)}
@@ -169,8 +158,8 @@ export default function SectionRight(props: {
 
         .description-container,
         .relations-container {
+          min-height: calc(100% - 4.5rem);
           margin-bottom: 1rem;
-          height: auto;
         }
 
         .relation-tabs {
@@ -178,11 +167,13 @@ export default function SectionRight(props: {
         }
 
         .buttons {
-          margin-top: 1rem;
-          height: 4rem;
+          position: absolute;
+          left: 0;
+          hight: 4rem;
           width: 100%;
-          position: relative;
-          bottom: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
         }
       `}</style>
     </>

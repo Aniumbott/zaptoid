@@ -31,6 +31,7 @@ model Person {
   relationsI Relation[] @relation(name: "RelationsI") // relations indirect
   createdBy   User?      @relation(fields: [userId], references: [id])
   userId      String?
+  createdAt   DateTime   @default(now())
 }
 
 model Role{
@@ -39,16 +40,18 @@ model Role{
   Relation  Relation[] @relation(name:"Roles")
   createdBy User    @relation(fields: [userId], references: [id])
   userId    String
+  createdAt DateTime @default(now())
 }
 
 model Relation {
   id        String  @id @unique @default(cuid())
-  role      Role    @relation(name: "Roles", fields: [roleId], references: [id])
-  roleId    String
+  role      Role?    @relation(name: "Roles", fields: [roleId], references: [id])
+  roleId    String?
   isPerson  Person? @relation(name: "RelationsD", fields: [isPersonId], references: [id])
   isPersonId String?
   ofPerson  Person? @relation(name:"RelationsI", fields: [ofPersonId], references: [id])
   ofPersonId String?
   createdBy User    @relation(fields: [userId], references: [id])
   userId    String
+  createdAt DateTime @default(now())
 }

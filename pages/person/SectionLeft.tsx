@@ -11,7 +11,7 @@ import {
 import { TextInput } from "@mantine/core";
 
 // Import Components
-import { Person, personDefault, color } from "@/prisma/types";
+import { Person, personDefault, color } from "@/src/types";
 import MultiInput from "./MultiInput";
 
 // Export Module
@@ -41,7 +41,11 @@ export default function SectionLeft(props: {
                 : "blue"
             }
           >
-            {person.name.split(" ").map((n: string) => n[0])}
+            {person.name
+              .split(" ")
+              .map((n: string) => n[0])
+              .join("")
+              .substring(0, 2)}
           </Avatar>
         </div>
         <Card
@@ -57,10 +61,11 @@ export default function SectionLeft(props: {
             {editable ? (
               // Name Input
               <TextInput
-                defaultValue={person.name}
+                value={person.name}
                 placeholder="Full Name"
                 label="Person name"
                 radius="md"
+                {...form.getInputProps(`name`)}
               />
             ) : (
               <Title order={2}> {person.name}</Title>

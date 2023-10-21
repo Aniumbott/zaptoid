@@ -16,6 +16,7 @@ import {
   IconUser,
   IconSettings,
   IconLogout,
+  // IconBrandGraphql,
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -83,14 +84,14 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 const mockdata = [
   //Mockdata for NavbarLink
   { icon: IconHome2, label: "Home", link: "/" },
+  // { icon: IconBrandGraphql, label: "Visualizer", link: "/visualizer" },
   { icon: IconUser, label: "Account", link: "/account" },
   { icon: IconSettings, label: "Settings", link: "/settings" },
 ];
 
 // Export Component
-export default function NavBar() {
-  const [active, setActive] = useState(0);
-  const { data: session, status } = useSession() as any;
+export default function NavBar(props: { active: number }) {
+  const [active, setActive] = useState(props.active);
   const router = useRouter();
   const links = mockdata.map((link, index) => (
     <NavbarLink
@@ -118,6 +119,7 @@ export default function NavBar() {
           color: theme.primaryColor,
         }).background,
       })}
+
       className="navbar"
     >
       <Center>
@@ -136,10 +138,10 @@ export default function NavBar() {
             left: 0;
           }
             #logo {
-            height: 3.125rem;
+            height: 3.125rem; 
+            }
           `}
         </style>
-
       </Center>
       <Navbar.Section grow mt={50}>
         <Stack justify="center" spacing={0}>

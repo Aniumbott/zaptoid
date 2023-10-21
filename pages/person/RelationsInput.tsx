@@ -1,5 +1,5 @@
 // Import Modules
-import { CurrentUser, currentUserDefault, Role } from "@/prisma/types";
+import { CurrentUser, currentUserDefault, Role } from "@/src/types";
 import { Button, Select, ActionIcon } from "@mantine/core";
 import { IconTrash, IconPlus } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
@@ -41,7 +41,7 @@ export default function RelationsInput(props: {
                     searchable
                     radius="md"
                     key={key}
-                    maxDropdownHeight={280}
+                    maxDropdownHeight={200}
                     {...form.getInputProps(`relationsD.${key}.roleId`)}
                   />
                 </td>
@@ -61,7 +61,7 @@ export default function RelationsInput(props: {
                     searchable
                     radius="md"
                     key={key}
-                    maxDropdownHeight={280}
+                    maxDropdownHeight={200}
                     {...form.getInputProps(`relationsD.${key}.ofPersonId`)}
                   />
                 </td>
@@ -100,7 +100,7 @@ export default function RelationsInput(props: {
                     searchable
                     radius="md"
                     key={key}
-                    maxDropdownHeight={280}
+                    maxDropdownHeight={200}
                     {...form.getInputProps(`relationsI.${key}.isPersonId`)}
                   />
                 </td>
@@ -118,7 +118,7 @@ export default function RelationsInput(props: {
                     searchable
                     radius="md"
                     key={key}
-                    maxDropdownHeight={280}
+                    maxDropdownHeight={200}
                     {...form.getInputProps(`relationsI.${key}.roleId`)}
                   />
                 </td>

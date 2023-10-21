@@ -14,18 +14,21 @@ type dbProps = {
 async function getRelations(post: dbProps, res: NextApiResponse) {
   // Update user if exists, else create new user
   try {
-    let dbData = await prisma.relation.findMany({ // Collect all relations created by user
+    let dbData = await prisma.relation.findMany({
+      // Collect all relations created by user
       where: {
         userId: post.id,
       },
     });
 
-    if (post.isPersonId != "") { // Filter relations by isPersonId if exists
-      dbData = dbData.filter( 
+    if (post.isPersonId != "") {
+      // Filter relations by isPersonId if exists
+      dbData = dbData.filter(
         (relation) => relation.isPersonId == post.isPersonId
       );
-      if (post.ofPersonId != "") { // Filter relations by ofPersonId if exists
-        dbData = dbData.filter( 
+      if (post.ofPersonId != "") {
+        // Filter relations by ofPersonId if exists
+        dbData = dbData.filter(
           (relation) => relation.ofPersonId == post.ofPersonId
         );
       }
@@ -42,4 +45,36 @@ async function getRelations(post: dbProps, res: NextApiResponse) {
   }
 }
 
-export { getRelations };
+// Delete or create relations
+async function updateRelations(post: any, res: NextApiResponse) {
+  try {
+    if (post.task === "delete") {
+      console.log(post);
+      const dbData = await prisma.relation.delete({
+        where: {
+          id: post.id,
+        },
+      });
+      return res
+        .status(200)
+        .json({ dbData, msg: "Relation deleted successfully." });
+    } else {
+      const dbData = await prisma.relation.create({
+        data: {
+          userId: post.userId,
+          isPersonId: post.isPersonId,
+          ofPersonId: post.ofPersonId,
+          roleId: post.roleId,
+        },
+      });
+      return res
+        .status(200)
+        .json({ dbData, msg: "Relation created successfully." });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ msg: "Something went wrong." });
+  }
+}
+
+export { getRelations, updateRelations };

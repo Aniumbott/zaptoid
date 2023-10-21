@@ -14,11 +14,13 @@ import {
   Person,
   personDefault,
   Relation,
-} from "@/prisma/types";
+} from "@/src/types";
 import wallpaper from "../../public/profile-bg.svg";
 import SectionLeft from "./SectionLeft";
 import SectionRight from "./SectionRight";
 import NavBar from "../components/NavBar";
+import getCurrentUser from "../../src/getCurrentUser";
+import { updatePerson, updateRelation } from "../../src/dbFunctions";
 
 // Export Module
 export default function Page() {
@@ -26,6 +28,7 @@ export default function Page() {
     useState<CurrentUser>(currentUserDefault);
   const [person, setPerson] = useState<Person>(personDefault);
   const [editable, setEditable] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Form object
@@ -66,6 +69,97 @@ export default function Page() {
     },
   });
 
+  // Functions
+  // Update the form values in the database
+  async function updateFormValues(values: any) {
+    try {
+      let data = await updatePerson(values); // First update the person
+      let dbData =
+        data.status === 200
+          ? await data.json().then((data) => data.dbData)
+          : null;
+
+      if (dbData) {
+        const oldRelations =
+          currentUser.relations?.filter(
+            (relation: Relation) =>
+              relation.ofPersonId === dbData.id ||
+              relation.isPersonId === dbData.id
+          ) || [];
+
+        // Filter out the relations that are already present
+        const addable = values.relationsD // Relations to be added
+          .filter(
+            (relation: Relation) =>
+              !oldRelations.some(
+                (oldRelation: Relation) =>
+                  oldRelation.ofPersonId === relation.ofPersonId &&
+                  oldRelation.roleId === relation.roleId
+              )
+          )
+          .map((relation: Relation) => ({ ...relation, isPersonId: dbData.id }))
+          .concat(
+            values.relationsI
+              .filter(
+                (relation: Relation) =>
+                  !oldRelations.some(
+                    (oldRelation: Relation) =>
+                      oldRelation.isPersonId === relation.isPersonId &&
+                      oldRelation.roleId === relation.roleId
+                  )
+              )
+              .map((relation: Relation) => ({
+                ...relation,
+                ofPersonId: dbData.id,
+              }))
+          );
+
+        const deletable = oldRelations.filter((relation: Relation) => {
+          // Relations to be deleted
+          if (relation.ofPersonId !== dbData.id) {
+            return !values.relationsD.some(
+              (newRelation: Relation) =>
+                newRelation.ofPersonId === relation.ofPersonId &&
+                newRelation.roleId === relation.roleId
+            );
+          } else {
+            return !values.relationsI.some(
+              (newRelation: Relation) =>
+                newRelation.isPersonId === relation.isPersonId &&
+                newRelation.roleId === relation.roleId
+            );
+          }
+        });
+
+        // Conseutive API calls
+        Promise.all(
+          addable?.map((relation: Relation) =>
+            updateRelation({ task: "add", ...relation })
+          )
+        ).then(() => {
+          Promise.all(
+            deletable?.map((relation: Relation) =>
+              updateRelation({ task: "delete", ...relation })
+            )
+          ).then(() => {
+            getCurrentUser({ currentUser, setCurrentUser }).then(() => {
+              // Update the currentUser state
+              console.log(currentUser);
+              setPerson(dbData);
+              setEditable(false);
+              setLoading(false);
+            });
+          });
+        });
+      }
+
+      return data;
+    } catch (err: any) {
+      setLoading(false);
+      alert(err.message);
+    }
+  }
+
   // Event Handlers
   // Fetch all the persons and update the state
   useEffect(() => {
@@ -74,6 +168,12 @@ export default function Page() {
       setCurrentUser(JSON.parse(currentUser));
     }
   }, []);
+
+  useEffect(() => {
+    if (currentUser.id) {
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    }
+  }, [currentUser]);
 
   // Gather all the persons and relations from localStorage
   useEffect(() => {
@@ -105,7 +205,7 @@ export default function Page() {
       description: person.description,
       relationsD:
         currentUser.relations
-          .filter(
+          ?.filter(
             (relation: Relation) =>
               relation.isPersonId === router.query.personId
           )
@@ -118,7 +218,7 @@ export default function Page() {
           ) || form.values.relationsD,
       relationsI:
         currentUser.relations
-          .filter(
+          ?.filter(
             (relation: Relation) =>
               relation.ofPersonId === router.query.personId
           )
@@ -142,7 +242,7 @@ export default function Page() {
       <Head>
         <title>{person.name} | Zaptoid</title>
       </Head>
-      <NavBar />
+      <NavBar active={0} />
       <div className="container">
         <div className="wallpaper">
           <Image src={wallpaper} alt="wallpaper" />
@@ -150,7 +250,13 @@ export default function Page() {
         <div className="person">
           <form
             onSubmit={form.onSubmit((values) => {
-              console.log(values);
+              // console.log(values);
+              setLoading(true);
+              updateFormValues({
+                ...values,
+                id: person.id,
+                userId: currentUser.id,
+              });
             })}
           >
             <div className="person-details">
@@ -162,6 +268,7 @@ export default function Page() {
                 editable={editable}
                 setEditable={setEditable}
                 form={form}
+                loading={loading}
               />
             </div>
           </form>

@@ -6,11 +6,11 @@ import Head from "next/head";
 // Import Components
 import NavBar from "../components/NavBar";
 import PersonCard from "./PersonCard";
-import { Person } from "@/prisma/types";
+import { Person } from "@/src/types";
 import PersonCardSkeleton from "./PersonCardSkeleton";
 
 // Export Module
-export default function Contacts(props: { persons: Person[] }) {
+export default function Home(props: { persons: Person[] }) {
   const { persons } = props;
   const router = useRouter();
 
@@ -19,23 +19,27 @@ export default function Contacts(props: { persons: Person[] }) {
       <Head>
         <title>Zaptoid</title>
       </Head>
-      <NavBar />
+      <NavBar active={0} />
       <div className="home-containeer">
         <Title order={1}>Contacts</Title>
         <div className="cards-conatiner">
           {persons && persons.length > 1
-            ? persons.map((person: Person) => (
-                <div
-                  className="card"
-                  key={person.id}
-                  onClick={() => {
-                    router.push(`/person/${person.id}`);
-                  }}
-                >
-                  {/* small person-card */}
-                  <PersonCard person={person} />
-                </div>
-              ))
+            ? persons.map((person: Person) => {
+                if (person.name !== "you") {
+                  return (
+                    <div
+                      className="card"
+                      key={person.id}
+                      onClick={() => {
+                        router.push(`/person/${person.id}`);
+                      }}
+                    >
+                      {/* small person-card */}
+                      <PersonCard person={person} />
+                    </div>
+                  );
+                }
+              })
             : // <div className="card">
               Array.from(Array(25).keys()).map((i) => {
                 return (

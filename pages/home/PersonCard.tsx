@@ -2,7 +2,7 @@
 import { Card, Text, Group, Avatar } from "@mantine/core";
 
 // Import Components
-import { Person, color } from "@/prisma/types";
+import { Person, color } from "@/src/types";
 
 // Export Module
 export default function PersonCard(props: { person: Person }) {
@@ -33,7 +33,11 @@ export default function PersonCard(props: { person: Person }) {
                 : "blue"
             }
           >
-            {person.name.split(" ").map((n: string) => n[0])}
+            {person.name
+              .split(" ")
+              .map((n: string) => n[0])
+              .join("")
+              .substring(0, 2)}
           </Avatar>
           <div className="person-details">
             <Text size="sm">

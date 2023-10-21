@@ -32,4 +32,20 @@ async function getRoles(post: dbProps, res: NextApiResponse) {
   }
 }
 
-export { getRoles };
+// Create role
+async function createRole(post: any, res: NextApiResponse) {
+  try {
+    const dbData = await prisma.role.create({
+      data: {
+        name: post.name,
+        userId: post.userId,
+      },
+    });
+    return res.status(200).json({ dbData, msg: "Role created successfully." });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ msg: "Something went wrong." });
+  }
+}
+
+export { getRoles, createRole };
