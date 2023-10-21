@@ -22,7 +22,9 @@ export default function Home(props: { persons: Person[] }) {
       </Head>
       <NavBar active={0} />
       <div className={styles.homeContainer}>
-        <Title order={1}>Contacts</Title>
+        <Title style={{ position: "fixed", zIndex: 1000 }} order={1}>
+          Contacts
+        </Title>
         <div className={styles.cardsContainer}>
           {persons && persons.length > 1
             ? persons.map((person: Person) => {

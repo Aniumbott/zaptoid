@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import {
   Navbar,
-  Center,
   Tooltip,
   UnstyledButton,
   createStyles,
-  Stack,
   rem,
 } from "@mantine/core";
+import Link from "next/link";
 import {
   IconHome2,
   IconUser,
@@ -19,22 +18,21 @@ import {
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
 import { signOut } from "next-auth/react";
 import logo from "../../public/zaptoid.svg";
 
 // Styles
 const useStyles = createStyles((theme) => ({
   link: {
-    width: rem(50),
-    height: rem(50),
+    width: rem(40),
+    height: rem(40),
     borderRadius: theme.radius.md,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     color: theme.white,
     opacity: 0.85,
-
+    margin: "10px 0",
     "&:hover": {
       opacity: 1,
       backgroundColor: theme.fn.lighten(
@@ -42,6 +40,9 @@ const useStyles = createStyles((theme) => ({
           .background!,
         0.1
       ),
+    },
+    "@media (max-width: 768px)": {
+      margin: "0",
     },
   },
 
@@ -110,7 +111,6 @@ export default function NavBar(props: { active: number }) {
 
   return (
     <Navbar
-      width={{ base: 80 }}
       p="md"
       sx={(theme) => ({
         backgroundColor: theme.fn.variant({
@@ -118,48 +118,82 @@ export default function NavBar(props: { active: number }) {
           color: theme.primaryColor,
         }).background,
       })}
-
       className="navbar"
     >
-      <Center>
+      <Link href="/">
         <Tooltip
           label="Zaptoid"
           position="right"
           transitionProps={{ duration: 0 }}
         >
-          <Image src={logo} alt="Zaptoid Logo" id="logo" />
+          <Image
+            src={logo}
+            alt="Zaptoid Logo"
+            id="logo"
+            height={40}
+            className="image"
+          />
         </Tooltip>
-        <style>
-          {`
-          .navbar{
-            position: fixed;
-            top: 0;
-            left: 0;
-          }
-            #logo {
-            height: 3.125rem; 
-            }
-          `}
-        </style>
-      </Center>
-      <Navbar.Section grow mt={50}>
-        <Stack justify="center" spacing={0}>
-          {links}
-        </Stack>
+      </Link>
+      <Navbar.Section grow className="links-container">
+        {links}
       </Navbar.Section>
       <Navbar.Section>
-        <Stack justify="center" spacing={0}>
-          <NavbarLink
-            icon={IconLogout}
-            onClick={() => {
-              router.replace("/").then(() => {
-                signOut();
-              });
-            }}
-            label="Logout"
-          />
-        </Stack>
+        <NavbarLink
+          icon={IconLogout}
+          onClick={() => {
+            router.replace("/").then(() => {
+              signOut();
+            });
+          }}
+          label="Logout"
+        />
       </Navbar.Section>
+      <style>
+        {`
+          .navbar{
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            width: 70px;
+            left: 0;
+          }
+
+            #logo {
+            height: 40px; 
+            }
+
+            .links-container{
+              display: flex;
+              flex-direction: column;
+              margin-top: 30px;
+            }
+
+            .image-container{
+              widht: 40px;
+            }
+
+            @media (max-width: 768px) {
+              .navbar{
+                padding-left:30px;
+                padding-right:30px;
+                flex-direction: row;
+                width: 100%;
+                height: 70px;
+                bottom: 0;
+                left: 0;
+                z-index: 100;
+              }
+              .links-container{
+                flex-direction: row;
+                justify-content: space-evenly;
+                width: 100%;
+                margin: 0;
+              }
+
+            }
+          `}
+      </style>
     </Navbar>
   );
 }

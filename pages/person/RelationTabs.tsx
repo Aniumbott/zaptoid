@@ -9,6 +9,7 @@ import {
 import { Anchor, Badge, Table, Tabs, Title, Text } from "@mantine/core";
 import { IconArrowsSplit2, IconArrowsJoin2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
+import style from "./person.module.css";
 
 // Import Components
 import RelationsInput from "./RelationsInput";
@@ -39,9 +40,9 @@ export default function RelationTabs(props: {
     return p ? p.name : "";
   }
 
-  return (
-    <>
-      <Tabs orientation="vertical" defaultValue="direct">
+  const TabsInside = () => {
+    return (
+      <>
         <Tabs.List>
           <Tabs.Tab value="direct" icon={<IconArrowsSplit2 size="0.8rem" />}>
             Direct
@@ -51,12 +52,13 @@ export default function RelationTabs(props: {
           </Tabs.Tab>
         </Tabs.List>
 
-        <Tabs.Panel value="direct" pl="xs">
+        <Tabs.Panel value="direct" pl="xs" mr={10}>
           <Table highlightOnHover striped>
             <tbody
               style={{
                 width: "100%",
                 height: "100%",
+                textAlign: "left",
               }}
             >
               {editable ? (
@@ -98,7 +100,13 @@ export default function RelationTabs(props: {
 
         <Tabs.Panel value="indirect" pl="xs">
           <Table highlightOnHover striped>
-            <tbody>
+            <tbody
+              style={{
+                width: "100%",
+                height: "100%",
+                textAlign: "left",
+              }}
+            >
               {editable ? (
                 <RelationsInput
                   variant="indirect"
@@ -135,7 +143,22 @@ export default function RelationTabs(props: {
             </tbody>
           </Table>
         </Tabs.Panel>
-      </Tabs>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <div className={style.desktop}>
+        <Tabs orientation="vertical" defaultValue="direct">
+          <TabsInside />
+        </Tabs>
+      </div>
+      <div className={style.mobile}>
+        <Tabs orientation="horizontal" defaultValue="direct">
+          <TabsInside />
+        </Tabs>
+      </div>
     </>
   );
 }

@@ -51,7 +51,8 @@ export default function SectionRight(props: {
 
         <Card
           style={{
-            marginTop: "1rem",
+            marginTop: "1.5rem",
+            minHeight: "50vh",
             width: "100%",
             height: "100%",
             overflowY: "scroll",
