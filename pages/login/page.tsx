@@ -31,10 +31,7 @@ export default function Page() {
               color="dimmed"
               className={style.signInText}
             >
-              It might happen that you just can't remember <b>"THAT GUY"</b> ?
-              Introducing <b>Zaptoid</b> a better version of old that classic
-              contacts app which help you to manage your network of people with
-              relation based system.
+              <b>Zaptoid</b> helps you to utilize your personal network to the fullest by keeping more precise details than a classic <b>Contacts</b> app.
             </Text>
 
             <Button

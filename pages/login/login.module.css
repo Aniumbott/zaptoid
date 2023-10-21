@@ -36,9 +36,18 @@
 }
 
 .signInText {
-  padding: 1rem 0rem;
+  padding: 1rem 0.25rem;
 }
 
 #logo {
   object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .signIn {
+    padding: 0 1.5rem;
+  }
+  .signInBox {
+    width: 100%;
+  }
 }
