@@ -10,7 +10,7 @@ import Head from "next/head";
 
 // Import Components
 import logo from "../../public/zaptoid.svg";
-
+import style from "./login.module.css";
 // Export Module
 export default function Page() {
   return (
@@ -18,10 +18,10 @@ export default function Page() {
       <Head>
         <title>Log In | Zaptoid</title>
       </Head>
-      <div className="sign-in">
-        <div className="sign-in-box">
+      <div className={style.signIn}>
+        <div className={style.signInBox}>
           <Card shadow="sm" withBorder>
-            <Card.Section className="sign-in-logo">
+            <Card.Section className={style.signInLogo}>
               <Image src={logo} id="logo" alt="logo" height={300} width={300} />
             </Card.Section>
 
@@ -29,7 +29,7 @@ export default function Page() {
               align="justify"
               size="lg"
               color="dimmed"
-              className="sign-in-text"
+              className={style.signInText}
             >
               It might happen that you just can't remember <b>"THAT GUY"</b> ?
               Introducing <b>Zaptoid</b> a better version of old that classic
@@ -45,65 +45,12 @@ export default function Page() {
               }}
               fullWidth
               size="lg"
-              className="sign-in-button"
+              className={style.signInButton}
             >
               Sign In with Google
             </Button>
           </Card>
         </div>
-        <style>
-          {`
-        body{
-          background-color: #000;
-        }
-        .sign-in{
-          height: 100vh;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .sign-in-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 25rem;
-            transition: all 0.2s ease-in-out;
-            overflow: hidden;
-            border-radius: 0.5rem;
-        }
-        .sign-in-box:hover {
-            box-shadow: 0px 0px 0px 10px #BC8CF266;
-          }
-        
-        .sign-in-button {
-          margin-top: 1rem;
-        }
-        
-        .sign-in-logo {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 20rem;
-          width: 100%;
-			margin:0;
-        }
-        
-		#logo{
-			object-fit: cover;	
-		}
-		
-        .sign-in-text{
-          padding: 1rem 0rem;
-        }
-
-
-            `}
-        </style>
       </div>
     </>
   );

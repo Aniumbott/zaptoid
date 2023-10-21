@@ -10,6 +10,7 @@ import {
   personDefault,
 } from "@/src/types";
 import RelationTabs from "./RelationTabs";
+import style from "./person.module.css";
 
 // Export Module
 export default function SectionRight(props: {
@@ -27,9 +28,9 @@ export default function SectionRight(props: {
 
   return (
     <>
-      <div className="section-right">
+      <div className={style.sectionRight}>
         <Card style={{ width: "100%" }}>
-          <div className="description-container">
+          <div className={style.descriptionContainer}>
             <Title order={4}>Description</Title>
             {editable ? (
               // Description Input
@@ -57,9 +58,9 @@ export default function SectionRight(props: {
           }}
           className="scrollbar-hidden"
         >
-          <div className="relations-container">
+          <div className={style.relationsContainer}>
             <Title order={4}>Relations</Title>
-            <div className="relation-tabs">
+            <div className={style.relationTabs}>
               <RelationTabs
                 currentUser={currentUser}
                 editable={editable}
@@ -68,7 +69,7 @@ export default function SectionRight(props: {
             </div>
           </div>
 
-          <div className="buttons">
+          <div className={style.buttons}>
             {editable ? (
               <>
                 <Tooltip label="Delete this person">
@@ -144,38 +145,6 @@ export default function SectionRight(props: {
           </div>
         </Card>
       </div>
-      <style jsx>{`
-        .section-right {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-          width: 30rem;
-          height: auto;
-          padding: 1.5rem;
-          width: 100%;
-        }
-
-        .description-container,
-        .relations-container {
-          min-height: calc(100% - 4.5rem);
-          margin-bottom: 1rem;
-        }
-
-        .relation-tabs {
-          margin-top: 1rem;
-        }
-
-        .buttons {
-          position: absolute;
-          left: 0;
-          hight: 4rem;
-          width: 100%;
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-        }
-      `}</style>
     </>
   );
 }

@@ -1,0 +1,44 @@
+.signIn {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.signInBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 25rem;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+  border-radius: 0.5rem;
+}
+.signInBox:hover {
+  box-shadow: 0px 0px 0px 10px #bc8cf266;
+}
+
+.signInButton {
+  margin-top: 1rem;
+}
+
+.signInLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 20rem;
+  width: 100%;
+  margin: 0;
+}
+
+.signInText {
+  padding: 1rem 0rem;
+}
+
+#logo {
+  object-fit: cover;
+}

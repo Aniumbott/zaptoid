@@ -13,6 +13,7 @@ import { TextInput } from "@mantine/core";
 // Import Components
 import { Person, personDefault, color } from "@/src/types";
 import MultiInput from "./MultiInput";
+import style from "./person.module.css";
 
 // Export Module
 export default function SectionLeft(props: {
@@ -25,8 +26,8 @@ export default function SectionLeft(props: {
 
   return (
     <>
-      <div className="section-left">
-        <div className="person-image">
+      <div className={style.sectionLeft}>
+        <div className={style.personImage}>
           <Avatar
             size={150}
             radius={150}
@@ -57,7 +58,7 @@ export default function SectionLeft(props: {
           }}
           className="scrollbar-hidden"
         >
-          <div className="person-name">
+          <div className={style.personName}>
             {editable ? (
               // Name Input
               <TextInput
@@ -71,7 +72,7 @@ export default function SectionLeft(props: {
               <Title order={2}> {person.name}</Title>
             )}
           </div>
-          <div className="phone-container">
+          <div className={style.phoneContainer}>
             <Title order={4}> Phone</Title>
             {editable ? (
               <MultiInput form={form} variant="phones" /> // Phone Input
@@ -101,7 +102,7 @@ export default function SectionLeft(props: {
             )}
           </div>
 
-          <div className="email-container">
+          <div className={style.emailContainer}>
             <Title order={4}> E-Mail</Title>
             {editable ? (
               <MultiInput form={form} variant="email" /> // Email Input
@@ -132,28 +133,6 @@ export default function SectionLeft(props: {
           </div>
         </Card>
       </div>
-      <style jsx>{`
-        .person-image {
-          position: absolute;
-          top: -75px;
-          left: 100px;
-          z-index: 1;
-        }
-        .section-left {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-          width: 30rem;
-          height: 100%;
-          padding: 1.5rem;
-        }
-        .person-name,
-        .phone-container,
-        .email-container {
-          margin-bottom: 1rem;
-        }
-      `}</style>
     </>
   );
 }

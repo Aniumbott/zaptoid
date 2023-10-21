@@ -3,6 +3,7 @@ import { Card, Text, Group, Avatar } from "@mantine/core";
 
 // Import Components
 import { Person, color } from "@/src/types";
+import style from "./home.module.css";
 
 // Export Module
 export default function PersonCard(props: { person: Person }) {
@@ -39,7 +40,7 @@ export default function PersonCard(props: { person: Person }) {
               .join("")
               .substring(0, 2)}
           </Avatar>
-          <div className="person-details">
+          <div className={style.personDetails}>
             <Text size="sm">
               <b>{person.name}</b>
             </Text>
@@ -49,16 +50,6 @@ export default function PersonCard(props: { person: Person }) {
           </div>
         </Group>
       </Card>
-      <style>
-        {`
-    .person-details {
-      display: flex;
-      flex-direction: column;
-      justify-content: left;
-      width: 10rem;
-    }
-    `}
-      </style>
     </>
   );
 }

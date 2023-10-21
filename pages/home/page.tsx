@@ -8,6 +8,7 @@ import NavBar from "../components/NavBar";
 import PersonCard from "./PersonCard";
 import { Person } from "@/src/types";
 import PersonCardSkeleton from "./PersonCardSkeleton";
+import styles from "./home.module.css";
 
 // Export Module
 export default function Home(props: { persons: Person[] }) {
@@ -20,15 +21,15 @@ export default function Home(props: { persons: Person[] }) {
         <title>Zaptoid</title>
       </Head>
       <NavBar active={0} />
-      <div className="home-containeer">
+      <div className={styles.homeContainer}>
         <Title order={1}>Contacts</Title>
-        <div className="cards-conatiner">
+        <div className={styles.cardsContainer}>
           {persons && persons.length > 1
             ? persons.map((person: Person) => {
                 if (person.name !== "you") {
                   return (
                     <div
-                      className="card"
+                      className={styles.card}
                       key={person.id}
                       onClick={() => {
                         router.push(`/person/${person.id}`);
@@ -40,44 +41,15 @@ export default function Home(props: { persons: Person[] }) {
                   );
                 }
               })
-            : // <div className="card">
-              Array.from(Array(25).keys()).map((i) => {
+            : Array.from(Array(25).keys()).map((i) => {
                 return (
-                  <div className="card" key={i}>
+                  <div className={styles.card} key={i}>
                     <PersonCardSkeleton key={i} />
                   </div>
                 );
               })}
         </div>
       </div>
-      <style jsx>{`
-        .home-containeer {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          margin-left: 5rem;
-          padding: 1rem;
-        }
-        .cards-conatiner {
-          max-width: calc(100% - 2rem);
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: left;
-          align-items: center;
-        }
-        .card {
-          margin: 0.5rem;
-          cursor: pointer;
-        }
-        .loader {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-      `}</style>
     </>
   );
 }

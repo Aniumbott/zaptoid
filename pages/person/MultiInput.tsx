@@ -2,6 +2,7 @@
 import { Button, TextInput, ActionIcon } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
+import style from "./person.module.css";
 
 // Export Module
 export default function MultiInput(props: { form: any; variant: string }) {
@@ -16,13 +17,13 @@ export default function MultiInput(props: { form: any; variant: string }) {
     }); // Form object
   return (
     <>
-      <div className="multi-input-container">
+      <div className={style.multiInputContainer}>
         {variant === "phones" ? (
           <>
             {form.values.phones.map((input: string, key: string) => {
               //Input for phone numbers
               return (
-                <div className="input-container" key={key}>
+                <div className={style.inputContainer} key={key}>
                   <TextInput
                     style={{ width: "100%", marginRight: "1rem" }}
                     radius="md"
@@ -58,7 +59,7 @@ export default function MultiInput(props: { form: any; variant: string }) {
             {form.values.emails.map((input: string, key: string) => {
               // Input for email ids
               return (
-                <div className="input-container" key={key}>
+                <div className={style.inputContainer} key={key}>
                   <TextInput
                     style={{ width: "100%", marginRight: "1rem" }}
                     radius="md"
@@ -91,21 +92,6 @@ export default function MultiInput(props: { form: any; variant: string }) {
           </>
         )}
       </div>
-      <style jsx>{`
-        .multi-input-container {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: right;
-        }
-        .input-container {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 100%;
-          margin-bottom: 1rem;
-        }
-      `}</style>
     </>
   );
 }

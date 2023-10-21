@@ -21,6 +21,7 @@ import SectionRight from "./SectionRight";
 import NavBar from "../components/NavBar";
 import getCurrentUser from "../../src/getCurrentUser";
 import { updatePerson, updateRelation } from "../../src/dbFunctions";
+import style from "./person.module.css";
 
 // Export Module
 export default function Page() {
@@ -232,22 +233,17 @@ export default function Page() {
     });
   }, [person, editable]);
 
-  // useEffect(() => {
-  //   console.log(form.values);
-  //   console.log(form.errors);
-  // }, [form.values]);
-
   return (
     <>
       <Head>
         <title>{person.name} | Zaptoid</title>
       </Head>
       <NavBar active={0} />
-      <div className="container">
-        <div className="wallpaper">
+      <div className={style.container}>
+        <div className={style.wallpaper}>
           <Image src={wallpaper} alt="wallpaper" />
         </div>
-        <div className="person">
+        <div className={style.person}>
           <form
             onSubmit={form.onSubmit((values) => {
               // console.log(values);
@@ -259,7 +255,7 @@ export default function Page() {
               });
             })}
           >
-            <div className="person-details">
+            <div className={style.personDetails}>
               <SectionLeft person={person} editable={editable} form={form} />
               <Divider orientation="vertical" />
               <SectionRight
@@ -274,38 +270,6 @@ export default function Page() {
           </form>
         </div>
       </div>
-      <style jsx>{`
-        .container {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: calc(100% - 5rem);
-          height: 100vh;
-          margin-left: 5rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .wallpaper {
-          width: 100%;
-          height: 10rem;
-          overflow: hidden;
-        }
-        .person {
-          position: relative;
-          height: 100%;
-          width: 100%;
-        }
-        .person-details {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: row;
-        }
-      `}</style>
     </>
   );
 }

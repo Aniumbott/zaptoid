@@ -1,0 +1,96 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(100% - 5rem);
+  height: 100vh;
+  margin-left: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wallpaper {
+  width: 100%;
+  height: 10rem;
+  overflow: hidden;
+}
+.person {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.personDetails {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.personImage {
+  position: absolute;
+  top: -75px;
+  left: 100px;
+  z-index: 1;
+}
+.sectionLeft {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 30rem;
+  height: 100%;
+  padding: 1.5rem;
+}
+.personName,
+.phoneContainer,
+.emailContainer {
+  margin-bottom: 1rem;
+}
+
+.sectionRight {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 30rem;
+    height: auto;
+    padding: 1.5rem;
+    width: 100%;
+  }
+
+  .descriptionContainer,
+  .relationsContainer {
+    min-height: calc(100% - 4.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .relationTabs {
+    margin-top: 1rem;
+  }
+
+  .buttons {
+    position: absolute;
+    left: 0;
+    hight: 4rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .multiInputContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: right;
+  }
+  .inputContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
