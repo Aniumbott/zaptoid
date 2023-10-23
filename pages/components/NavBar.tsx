@@ -153,7 +153,7 @@ export default function NavBar(props: { active: number }) {
                 id: "NA",
                 name: "Zaptoid Person",
                 email: "",
-                phone: [],
+                phone: [""],
                 joined: new Date(),
               } as User,
               false

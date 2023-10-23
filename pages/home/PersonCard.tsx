@@ -20,7 +20,7 @@ export default function PersonCard(props: { person: Person }) {
 
   return (
     <>
-      <Card shadow="sm" padding="xs" radius="xl">
+      <Card shadow="sm" padding="xs" radius="xl" className={style.personCard}>
         <Group position="apart">
           <Avatar
             size="md"

@@ -1,6 +1,16 @@
 // import Modules
 import { useRouter } from "next/router";
-import { Card, Title, Text, Button, Textarea, Tooltip } from "@mantine/core";
+import {
+  Card,
+  Title,
+  Text,
+  Button,
+  Textarea,
+  Tooltip,
+  rem,
+} from "@mantine/core";
+import { IconCheck } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
 
 // Import Components
 import {
@@ -11,6 +21,7 @@ import {
 } from "@/src/types";
 import RelationTabs from "./RelationTabs";
 import style from "./person.module.css";
+import { updateRelation, deletePerson } from "@/src/dbFunctions";
 
 // Export Module
 export default function SectionRight(props: {
@@ -24,6 +35,42 @@ export default function SectionRight(props: {
   const currentUser = props.currentUser || currentUserDefault;
   const person = props.person || personDefault;
   const router = useRouter();
+
+  // Functions
+  function deletePersonHandle(id: string) {
+    // First delete all his relations
+    if (confirm("Are you sure you want to delete this person? \nNote: All the details related to this person will be deleted as well.")) {
+      const deletables = currentUser.relations.filter((relation) => {
+        return relation.ofPersonId === id || relation.isPersonId === id;
+      });
+      notifications.show({
+        loading: true,
+        message: "Deleting Person...",
+        autoClose: false,
+        withCloseButton: false,
+        id: "deleting",
+        withBorder: true,
+      });
+      Promise.all(
+        deletables?.map((relation) => {
+          updateRelation({ task: "delete", ...relation });
+        })
+      ).then(() => {
+        deletePerson(id).then(() => {
+          notifications.update({
+            id: "deleting",
+            color: "teal",
+            message: "Person Deleted Succefully",
+            icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+            loading: false,
+            autoClose: 3000,
+            withBorder: true,
+          });
+          router.push("/");
+        });
+      });
+    }
+  }
 
   return (
     <>
@@ -69,7 +116,7 @@ export default function SectionRight(props: {
                     style={{
                       margin: "1rem",
                     }}
-                    // onClick={}
+                    onClick={() => deletePersonHandle(person.id)}
                     color="red"
                   >
                     Delete

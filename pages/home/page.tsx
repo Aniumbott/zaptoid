@@ -31,7 +31,7 @@ export default function Home(props: { persons: Person[] }) {
                 if (person.name !== "you") {
                   return (
                     <div
-                      className={styles.card}
+                      className={styles.cardContainer}
                       key={person.id}
                       onClick={() => {
                         router.push(`/person/${person.id}`);
@@ -45,7 +45,7 @@ export default function Home(props: { persons: Person[] }) {
               })
             : Array.from(Array(25).keys()).map((i) => {
                 return (
-                  <div className={styles.card} key={i}>
+                  <div className={styles.cardContainer} key={i}>
                     <PersonCardSkeleton key={i} />
                   </div>
                 );

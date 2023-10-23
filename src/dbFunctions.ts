@@ -76,8 +76,8 @@ async function updatePerson(values: any) {
       userId: values.userId,
       id: values.id,
       name: values.name,
-      phones: values.phones.map((phone: any) => phone.number),
-      emails: values.emails.map((email: any) => email.email),
+      phones: values.phones.map((phone: any) => phone.number) || [],
+      emails: values.emails.map((email: any) => email.email) || [],
       description: values.description,
     }),
   });
@@ -96,6 +96,18 @@ async function updateRelation(values: any) {
   return data;
 }
 
+async function deletePerson(id: string) {
+  const data = await fetch(`/api/db`, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "deletePerson",
+      id: id,
+      userId: JSON.parse(localStorage.getItem("currentUser") || "{}").id || "",
+    }),
+  });
+  return data;
+}
+
 export {
   createPerson,
   getUser,
@@ -104,4 +116,5 @@ export {
   getAllRelations,
   updatePerson,
   updateRelation,
+  deletePerson,
 };

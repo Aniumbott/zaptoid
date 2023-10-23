@@ -16,10 +16,14 @@
   justify-content: left;
   align-items: center;
 }
-.card {
+.cardContainer {
   margin: 0.5rem;
   cursor: pointer;
   width: 15rem;
+}
+
+.personCard:hover {
+  box-shadow: 0 0 2px var(--mantine-color-violet-4);
 }
 
 .personDetails {
@@ -36,7 +40,7 @@
     flex-direction: column;
     align-items: center;
   }
-  .card {
+  .cardContainer {
     height: 4rem;
     width: 85%;
     text-align: left;

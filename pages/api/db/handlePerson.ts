@@ -99,4 +99,24 @@ async function updatePerson(post: any, res: NextApiResponse) {
   }
 }
 
-export { createPerson, updatePerson, getAllPersons };
+async function deletePerson(post: any, res: NextApiResponse) {
+  try {
+    const dbData = await prisma.person.delete({
+      where: {
+        id: post.id,
+        userId: post.userId,
+      },
+    });
+    if (!dbData) {
+      return res.status(400).json({ msg: "No person found." });
+    }
+    return res
+      .status(200)
+      .json({ dbData, msg: "Person deleted successfully." });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ msg: "Something went wrong." });
+  }
+}
+
+export { createPerson, updatePerson, getAllPersons, deletePerson };

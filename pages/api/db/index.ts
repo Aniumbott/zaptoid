@@ -1,7 +1,12 @@
 // Import Modules
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getUser } from "./handleUser";
-import { getAllPersons, updatePerson, createPerson } from "./handlePerson";
+import {
+  createPerson,
+  getAllPersons,
+  updatePerson,
+  deletePerson,
+} from "./handlePerson";
 import { getRoles } from "./handleRoles";
 import { getRelations, updateRelations } from "./handleRelation";
 
@@ -33,8 +38,10 @@ export default async function handleDbRequest( // Handle POST request
           return await getRelations(post, res);
         case "updatePerson": // Handle person update
           return await updatePerson(post, res);
-        case "updateRelations": // Handle relation update
+        case "updateRelations": // Handle relation update (add and delete)
           return await updateRelations(post, res);
+        case "deletePerson": // Handle person delete
+          return await deletePerson(post, res);
         default:
           return res.status(400).json({ msg: "Invalid action." });
       }
