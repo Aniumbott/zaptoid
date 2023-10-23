@@ -29,7 +29,7 @@ export default function Main() {
           res
             .json()
             .then(async (data) => {
-              await createPerson(data.dbData); // Create person object of user
+              await createPerson(data.dbData, true); // Create person object of user
               return data;
             })
             .then((data) => {

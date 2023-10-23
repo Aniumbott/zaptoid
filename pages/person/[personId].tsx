@@ -1,11 +1,13 @@
 "use client";
 // Import Modules
 import { useRouter } from "next/router";
-import { Divider } from "@mantine/core";
+import { Divider, rem } from "@mantine/core";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Head from "next/head";
 import { useForm } from "@mantine/form";
+import { IconCheck } from "@tabler/icons-react";
+import { notifications } from "@mantine/notifications";
 
 // Import Components
 import {
@@ -29,7 +31,7 @@ export default function Page() {
     useState<CurrentUser>(currentUserDefault);
   const [person, setPerson] = useState<Person>(personDefault);
   const [editable, setEditable] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
   const router = useRouter();
 
   // Form object
@@ -148,7 +150,7 @@ export default function Page() {
               console.log(currentUser);
               setPerson(dbData);
               setEditable(false);
-              setLoading(false);
+              setUpdating(false);
             });
           });
         });
@@ -156,7 +158,7 @@ export default function Page() {
 
       return data;
     } catch (err: any) {
-      setLoading(false);
+      setUpdating(false);
       alert(err.message);
     }
   }
@@ -233,12 +235,35 @@ export default function Page() {
     });
   }, [person, editable]);
 
+  useEffect(() => {
+    if (updating) {
+      notifications.show({
+        loading: true,
+        message: "Saving the changes...",
+        autoClose: false,
+        withCloseButton: false,
+        id: "updating",
+        withBorder: true,
+      });
+    } else {
+      notifications.update({
+        id: "updating",
+        color: "teal",
+        message: "Changes saved.",
+        icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
+        loading: false,
+        autoClose: 3000,
+        withBorder: true,
+      });
+    }
+  }, [updating]);
+
   return (
     <>
       <Head>
         <title>{person.name} | Zaptoid</title>
       </Head>
-      <NavBar active={0} />
+      <NavBar active={-1} />
       <div className={style.container}>
         <div className={style.wallpaper}>
           <Image src={wallpaper} alt="wallpaper" />
@@ -247,7 +272,7 @@ export default function Page() {
           <form
             onSubmit={form.onSubmit((values) => {
               // console.log(values);
-              setLoading(true);
+              setUpdating(true);
               updateFormValues({
                 ...values,
                 id: person.id,
@@ -264,7 +289,6 @@ export default function Page() {
                 editable={editable}
                 setEditable={setEditable}
                 form={form}
-                loading={loading}
               />
             </div>
           </form>

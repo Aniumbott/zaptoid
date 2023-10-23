@@ -6,6 +6,7 @@ import {
   ColorSchemeProvider,
   ColorScheme,
 } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 // Import Components
 import AuthProvider from "./components/AuthProvider";
@@ -45,6 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
           primaryColor: "violet",
         }}
       >
+        <Notifications position="top-right" zIndex={1000} />
         <AuthProvider>
           <Component {...pageProps} />
         </AuthProvider>

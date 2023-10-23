@@ -1,15 +1,17 @@
 import { User } from "./types";
 
 // Function to create a person object of user
-async function createPerson(person: User) {
+async function createPerson(person: User, isUser: boolean) {
   const res = await fetch(`/api/db`, {
     method: "POST",
     body: JSON.stringify({
-      action: "createUserPerson",
+      action: "createPerson",
+      isUser: isUser,
+      id: person.id,
       name: person.name,
       email: [person.email],
       phone: [person.phone[0]] || [],
-      id: person.id,
+      userId: JSON.parse(localStorage.getItem("user") || "{}").id || "",
     }),
   });
   return res;

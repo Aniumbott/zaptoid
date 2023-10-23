@@ -22,7 +22,7 @@ export default function Home(props: { persons: Person[] }) {
       </Head>
       <NavBar active={0} />
       <div className={styles.homeContainer}>
-        <Title style={{ position: "fixed", zIndex: 1000 }} order={1}>
+        <Title style={{ position: "fixed", zIndex: 10 }} order={1}>
           Contacts
         </Title>
         <div className={styles.cardsContainer}>

@@ -46,22 +46,24 @@ async function createPerson(
 ) {
   try {
     // Update user if exists, else create new user
-    const dbData = await prisma.person.findUnique({
+    console.log(post);
+    const dbData = await prisma.person.upsert({
       where: {
+        email: post.email,
+        userId: post.userId,
+      },
+      update: {
+        name: isUser ? "you" : post.name,
+        email: post.email,
+        userId: post.userId,
+      },
+      create: {
+        name: isUser ? "you" : post.name,
         email: post.email,
         userId: post.userId,
       },
     });
 
-    if (!dbData) {
-      const dbData = await prisma.person.create({
-        data: {
-          name: isUser ? "you" : post.name,
-          email: post.email,
-          userId: post.userId,
-        },
-      });
-    }
     return res
       .status(200)
       .json({ dbData, msg: "Person created successfully." });

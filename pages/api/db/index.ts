@@ -24,8 +24,9 @@ export default async function handleDbRequest( // Handle POST request
           return await getUser(post, res);
         case "getAllPersons": // Handle to colect all the persons
           return await getAllPersons(post, res);
-        case "createUserPerson": // Handle userperson objrct
-          return await createPerson(post, res, true);
+        case "createPerson": // Handle person objrct
+          if (post.isUser) return await createPerson(post, res, true);
+          return await createPerson(post, res, false);
         case "getRoles":
           return await getRoles(post, res);
         case "getRelations": // Handle to collect all the specific relations

@@ -11,15 +11,19 @@ import {
 import Link from "next/link";
 import {
   IconHome2,
-  IconUser,
+  IconPlus,
   IconSettings,
   IconLogout,
+  IconCheck,
   // IconBrandGraphql,
 } from "@tabler/icons-react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import logo from "../../public/zaptoid.svg";
+import { createPerson } from "../../src/dbFunctions";
+import { User } from "@/src/types";
+import { notifications } from "@mantine/notifications";
 
 // Styles
 const useStyles = createStyles((theme) => ({
@@ -81,29 +85,10 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-const mockdata = [
-  //Mockdata for NavbarLink
-  { icon: IconHome2, label: "Home", link: "/" },
-  // { icon: IconBrandGraphql, label: "Visualizer", link: "/visualizer" },
-  { icon: IconUser, label: "Account", link: "/account" },
-  { icon: IconSettings, label: "Settings", link: "/settings" },
-];
-
 // Export Component
 export default function NavBar(props: { active: number }) {
   const [active, setActive] = useState(props.active);
   const router = useRouter();
-  const links = mockdata.map((link, index) => (
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
-      onClick={() => {
-        setActive(index);
-        router.push(`${link.link}`);
-      }}
-    />
-  ));
 
   useEffect(() => {
     console.log(active);
@@ -120,7 +105,8 @@ export default function NavBar(props: { active: number }) {
       })}
       className="navbar"
     >
-      <Link href="/">
+      {/* Zaptoid Logo */}
+      <Link href="/" className="image-container">
         <Tooltip
           label="Zaptoid"
           position="right"
@@ -135,9 +121,86 @@ export default function NavBar(props: { active: number }) {
           />
         </Tooltip>
       </Link>
+
+      {/* Links */}
       <Navbar.Section grow className="links-container">
-        {links}
+        <NavbarLink
+          icon={IconHome2}
+          label="Home"
+          key="Home"
+          active={0 === active}
+          onClick={() => {
+            setActive(0);
+            router.push("/");
+          }}
+        />
+        <NavbarLink
+          icon={IconPlus}
+          label="Add Person"
+          key="Add Person"
+          onClick={() => {
+            notifications.show({
+              loading: true,
+              message: "Creating new person",
+              autoClose: false,
+              withCloseButton: false,
+              id: "loading",
+              withBorder: true,
+            });
+
+            const getNewUser = createPerson(
+              {
+                id: "NA",
+                name: "Zaptoid Person",
+                email: "",
+                phone: [],
+                joined: new Date(),
+              } as User,
+              false
+            );
+            getNewUser.then((res) => {
+              if (res.status === 200) {
+                res.json().then((data) => {
+                  notifications.update({
+                    id: "loading",
+                    color: "teal",
+                    message: "New person created.",
+                    icon: (
+                      <IconCheck style={{ width: rem(18), height: rem(18) }} />
+                    ),
+                    loading: false,
+                    autoClose: 3000,
+                    withBorder: true,
+                  });
+                  const currentUser = JSON.parse(
+                    localStorage.getItem("currentUser") || ""
+                  );
+                  localStorage.setItem(
+                    "currentUser",
+                    JSON.stringify({
+                      ...currentUser,
+                      persons: [...currentUser.persons, data.dbData],
+                    })
+                  );
+                  router.push(`/person/${data.dbData.id}`);
+                });
+              }
+            });
+          }}
+        />
+        <NavbarLink
+          icon={IconSettings}
+          label="Settings"
+          key="Settings"
+          active={1 === active}
+          onClick={() => {
+            setActive(1);
+            router.push("/settings");
+          }}
+        />
       </Navbar.Section>
+
+      {/* LogOut Button */}
       <Navbar.Section>
         <NavbarLink
           icon={IconLogout}

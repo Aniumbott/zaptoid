@@ -18,10 +18,9 @@ export default function SectionRight(props: {
   currentUser: CurrentUser;
   editable: boolean;
   setEditable: Function;
-  loading: boolean;
   form: any;
 }) {
-  const { editable, setEditable, loading, form } = props;
+  const { editable, setEditable, form } = props;
   const currentUser = props.currentUser || currentUserDefault;
   const person = props.person || personDefault;
   const router = useRouter();
@@ -29,37 +28,27 @@ export default function SectionRight(props: {
   return (
     <>
       <div className={style.sectionRight}>
-        <Card style={{ width: "100%" }}>
-          <div className={style.descriptionContainer}>
-            <Title order={4}>Description</Title>
-            {editable ? (
-              // Description Input
-              <Textarea
-                placeholder="Anything special?"
-                radius="md"
-                {...form.getInputProps("description")}
-              />
-            ) : person.description ? (
-              <Text>{person.description}</Text>
-            ) : (
-              <Text size="sm" color="dimmed">
-                (none)
-              </Text>
-            )}
-          </div>
+        <Card className={style.descriptionContainer} style={{}}>
+          <Title order={4}>Description</Title>
+          {editable ? (
+            // Description Input
+            <Textarea
+              style={{ marginTop: "0.5rem" }}
+              placeholder="Anything special?"
+              radius="md"
+              {...form.getInputProps("description")}
+            />
+          ) : person.description ? (
+            <Text>{person.description}</Text>
+          ) : (
+            <Text size="sm" color="dimmed">
+              (none)
+            </Text>
+          )}
         </Card>
 
-        <Card
-          style={{
-            marginTop: "1.5rem",
-            minHeight: "50vh",
-            width: "100%",
-            height: "100%",
-            overflowY: "scroll",
-          }}
-          className="scrollbar-hidden"
-        >
-          <div className={style.relationsContainer}>
+        <Card className={`${style.relationsContainer} scrollbar-hidden`}>
+          <div style={{ width: "100%" }}>
             <Title order={4}>Relations</Title>
             <div className={style.relationTabs}>
               <RelationTabs
@@ -109,7 +98,7 @@ export default function SectionRight(props: {
                       style={{ marginLeft: "1rem" }}
                       radius="xl"
                     >
-                      {loading ? "Updating..." : "Save"}
+                      Save
                     </Button>
                   </Tooltip>
                 </div>
