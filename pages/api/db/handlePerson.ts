@@ -46,7 +46,6 @@ async function createPerson(
 ) {
   try {
     // Update user if exists, else create new user
-    console.log(post);
     const dbData = await prisma.person.upsert({
       where: {
         email: post.email,
