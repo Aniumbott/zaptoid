@@ -16,38 +16,68 @@ export default function Main() {
   // States for all the dbData
   const [currentUser, setCurrentUser] =
     useState<CurrentUser>(currentUserDefault);
-
+  const [user, setUser] = useState({ id: "" } as any); // The session is updating twice, so we need to check if the user is the same to avoid twice calls.
   const { data: session } = useSession() as any;
 
-  // dbData API calls
-  // First get/create the user
+  // Function collect the user data
+  async function getUserData(user: any) {
+    return await getUser(user).then((res) => {
+      if (res.status === 200) {
+        return res.json().then((data) => {
+          return data.dbData;
+        });
+      }
+    });
+  }
+
+  // Function to collect the person data
+  async function createUserPerson(user: any) {
+    return await createPerson(
+      {
+        ...user,
+        userId: user.id,
+        phone: "0000000000",
+      },
+      true
+    ).then((res) => {
+      if (res.status === 200) {
+        return res.json().then((data) => {
+          return data.dbData;
+        });
+      }
+    });
+  }
+
+  // Check if the user exist
   useEffect(() => {
-    if (session && session.user) {
-      const getRes = getUser(session.user); // Update as well as creaate user
-      getRes.then((res) => {
-        if (res.status === 200) {
-          res
-            .json()
-            .then(async (data) => {
-              await createPerson(data.dbData, true); // Create person object of user
-              return data;
-            })
-            .then((data) => {
-              setCurrentUser({
-                // Update user state
-                ...currentUser,
-                id: data.dbData.id,
-                name: data.dbData.name,
-                email: data.dbData.email,
-                phone: data.dbData.phone,
-                joined: data.dbData.joined,
-              });
-              return data;
-            });
-        }
-      });
+    if (session && session.user && session.user.id !== user.id) {
+      setUser(session.user);
     }
   }, [session]);
+
+  // Check if the user is logged in
+  useEffect(() => {
+    if (user.id !== "") {
+      getUserData(session.user)
+        .then((data: any) => {
+          // Collect user data from db
+          if (data.personId === null) {
+            // If the user has no user-person
+            createUserPerson(data).then((data: any) => {
+              // Create a user-person
+              getUserData({ ...session.user, personId: data.id }) // Update the personId in of the user
+                .then((data: any) => {
+                  setCurrentUser({ ...currentUser, ...data });
+                });
+            });
+          }
+          return data;
+        })
+        .then((data: any) => {
+          setCurrentUser({ ...currentUser, ...data });
+        });
+    }
+  }, [user]);
 
   // Now collect his data
   useEffect(() => {

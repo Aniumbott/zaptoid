@@ -23,20 +23,22 @@ export default function MultiInput(props: { form: any; variant: string }) {
             {form.values.phones.map((input: string, key: string) => {
               //Input for phone numbers
               return (
-                <div className={style.inputContainer} key={key}>
+                <div className={style.inputContainer} key={key} id={key}>
                   <TextInput
                     style={{ width: "100%", marginRight: "1rem" }}
                     radius="md"
                     placeholder="Phone Number"
                     {...form.getInputProps(`phones.${key}.number`)}
                   />
-                  <ActionIcon
-                    color="red"
-                    onClick={() => form.removeListItem("phones", key)}
-                    radius="md"
-                  >
-                    <IconTrash size="1rem" />
-                  </ActionIcon>
+                  {key != "0" ? (
+                    <ActionIcon
+                      color="red"
+                      onClick={() => form.removeListItem("phones", key)}
+                      radius="md"
+                    >
+                      <IconTrash size="1rem" />
+                    </ActionIcon>
+                  ) : null}
                 </div>
               );
             })}
@@ -66,13 +68,15 @@ export default function MultiInput(props: { form: any; variant: string }) {
                     placeholder="Email Id"
                     {...form.getInputProps(`emails.${key}.email`)}
                   />
-                  <ActionIcon
-                    color="red"
-                    onClick={() => form.removeListItem("emails", key)}
-                    radius="md"
-                  >
-                    <IconTrash size="1rem" />
-                  </ActionIcon>
+                  {key != "0" ? (
+                    <ActionIcon
+                      color="red"
+                      onClick={() => form.removeListItem("emails", key)}
+                      radius="md"
+                    >
+                      <IconTrash size="1rem" />
+                    </ActionIcon>
+                  ) : null}
                 </div>
               );
             })}

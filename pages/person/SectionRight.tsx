@@ -60,7 +60,7 @@ export default function SectionRight(props: {
           notifications.update({
             id: "deleting",
             color: "teal",
-            message: "Person Deleted Succefully",
+            message: "Person Deleted Succefully.",
             icon: <IconCheck style={{ width: rem(18), height: rem(18) }} />,
             loading: false,
             autoClose: 3000,

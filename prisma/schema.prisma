@@ -16,6 +16,7 @@ model User {
   phone    String[]   @unique
   email    String     @unique
   joined   DateTime
+  personId String?   @unique
   Person   Person[]
   Role     Role[]
   Relation Relation[]
@@ -24,8 +25,8 @@ model User {
 model Person {
   id          String     @id @unique @default(cuid())
   name        String
-  phone       String[]   @unique
-  email       String[]   @unique
+  phone       String[]  
+  email       String[]   
   description String?
   relationsD Relation[] @relation(name: "RelationsD") // relations direct
   relationsI Relation[] @relation(name: "RelationsI") // relations indirect

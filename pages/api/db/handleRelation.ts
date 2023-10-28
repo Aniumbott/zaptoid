@@ -49,7 +49,6 @@ async function getRelations(post: dbProps, res: NextApiResponse) {
 async function updateRelations(post: any, res: NextApiResponse) {
   try {
     if (post.task === "delete") {
-      console.log(post);
       const dbData = await prisma.relation.delete({
         where: {
           id: post.id,

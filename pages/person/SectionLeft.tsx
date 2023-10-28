@@ -32,17 +32,19 @@ export default function SectionLeft(props: {
             size={150}
             radius={150}
             variant="filled"
-            alt={`${person.name} avatar`}
+            alt={`${form?.values.name} avatar`}
             color={
-              person.name.split(" ").length > 1
+              form && form.values.name.split(" ").length > 1
                 ? color[
-                    person.name.split(" ")[0][0].toLowerCase().charCodeAt(0) %
-                      color.length
+                    form.values.name
+                      .split(" ")[0][0]
+                      .toLowerCase()
+                      .charCodeAt(0) % color.length
                   ]
                 : "blue"
             }
           >
-            {person.name
+            {form?.values.name
               .split(" ")
               .map((n: string) => n[0])
               .join("")

@@ -32,6 +32,15 @@
   width: 10rem;
 }
 
+.noContacts {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: calc(min(12vw, 6rem));
+  color: var(--mantine-color-dark-6);
+}
+
 @media (max-width: 768px) {
   .homeContainer {
     margin-left: 0;

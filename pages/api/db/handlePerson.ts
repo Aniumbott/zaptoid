@@ -5,6 +5,7 @@ import prisma from "../../../lib/prisma";
 // Define Types
 type dbProps = {
   action: string;
+  id: string;
   name: string;
   email: string[];
   phone: string[];
@@ -48,21 +49,22 @@ async function createPerson(
     // Update user if exists, else create new user
     const dbData = await prisma.person.upsert({
       where: {
-        email: post.email,
+        id: post.id,
         userId: post.userId,
       },
       update: {
         name: isUser ? "you" : post.name,
         email: post.email,
+        phone: post.phone,
         userId: post.userId,
       },
       create: {
         name: isUser ? "you" : post.name,
         email: post.email,
+        phone: post.phone,
         userId: post.userId,
       },
     });
-
     return res
       .status(200)
       .json({ dbData, msg: "Person created successfully." });

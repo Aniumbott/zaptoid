@@ -39,27 +39,35 @@ export default function Page() {
     initialValues: {
       name: "",
       phones: [{ number: "9999999999" }],
-      emails: [{ email: "xyz@gmail.com" }],
-      description: "",
-      relationsD: [{ roleId: "xyz", ofPersonId: "2" }],
-      relationsI: [{ roleId: "xyz", isPersonId: "2" }],
+      emails: [{ email: "newperson@zaptoid.mail" }],
+      description: "Nothing to show here",
+      relationsD: [{ roleId: "420", ofPersonId: "387" }],
+      relationsI: [{ roleId: "512", isPersonId: "974" }],
     },
     validate: {
       name: (value) => (value.trim().length >= 3 ? null : "Name is too short"), // Name should be atleast 3 characters long
       phones: {
         number: (value: String) =>
-          /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(
-            // Regex for phone number
-            `${value}`
-          )
-            ? null
-            : "Invalid Phone",
+          // Check if the number already assigned to someone else
+          !isPhonePresent(value)
+            ? /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(
+                // Regex for phone number
+                `${value}`
+              )
+              ? null
+              : "Invalid Phone"
+            : "Phone number already assigned to someone else",
       },
       emails: {
         email: (value: String) =>
-          /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.test(`${value}`) // Regex for email
-            ? null
-            : "Invalid Email",
+          //Chec if the email is already assigned to someone else
+          !isEmailPresent(value)
+            ? /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/.test(
+                `${value}`
+              ) // Regex for email
+              ? null
+              : "Invalid Email"
+            : "This email is already assigned to someone else",
       },
       relationsD: {
         roleId: (value: String) => (value ? null : "Select a Role"),
@@ -73,6 +81,25 @@ export default function Page() {
   });
 
   // Functions
+
+  // To check if the phone number is already present
+  function isPhonePresent(phone: String) {
+    return (
+      currentUser.persons
+        ?.filter((person: Person) => person.id !== router.query.personId)
+        .some((person: Person) => person.phone.includes(String(phone))) || false
+    );
+  }
+
+  // To chck if the email is already present
+  function isEmailPresent(email: String) {
+    return (
+      currentUser.persons
+        ?.filter((person: Person) => person.id !== router.query.personId)
+        .some((person: Person) => person.email.includes(String(email))) || false
+    );
+  }
+
   // Update the form values in the database
   async function updateFormValues(values: any) {
     try {
@@ -147,7 +174,7 @@ export default function Page() {
           ).then(() => {
             getCurrentUser({ currentUser, setCurrentUser }).then(() => {
               // Update the currentUser state
-              console.log(currentUser);
+              // console.log(currentUser);
               setPerson(dbData);
               setEditable(false);
               setUpdating(false);
@@ -164,23 +191,22 @@ export default function Page() {
   }
 
   // Event Handlers
-  // Fetch all the persons and update the state
   useEffect(() => {
-    const currentUser = localStorage.getItem("currentUser");
-    if (currentUser) {
-      setCurrentUser(JSON.parse(currentUser));
+    // Update the currentUser state
+    if (router.query.personId) {
+      const currentUser = localStorage.getItem("currentUser");
+      if (currentUser) {
+        setCurrentUser(JSON.parse(currentUser));
+      }
     }
-  }, []);
+  }, [router.query.personId]);
 
   useEffect(() => {
+    // Update the currentUser in the localStorage
     if (currentUser.id) {
       localStorage.setItem("currentUser", JSON.stringify(currentUser));
     }
-  }, [currentUser]);
-
-  // Gather all the persons and relations from localStorage
-  useEffect(() => {
-    // console.log(persons);
+    // Update the person state
     if (router.query.personId) {
       const getPerson = currentUser.persons.filter(
         (p: Person) => p.id == router.query.personId
@@ -189,9 +215,8 @@ export default function Page() {
       if (getPerson) {
         setPerson(getPerson);
       }
-      // console.log("person", getPerson);
     }
-  }, [router.query.personId, currentUser]);
+  }, [currentUser]);
 
   // Update the form values when person is updated
   useEffect(() => {

@@ -26,8 +26,9 @@ export default function Home(props: { persons: Person[] }) {
           Contacts
         </Title>
         <div className={styles.cardsContainer}>
-          {persons && persons.length > 1
-            ? persons.map((person: Person) => {
+          {persons && persons.length > 0 ? (
+            persons.length > 1 ? (
+              persons.map((person: Person) => {
                 if (person.name !== "you") {
                   return (
                     <div
@@ -43,13 +44,18 @@ export default function Home(props: { persons: Person[] }) {
                   );
                 }
               })
-            : Array.from(Array(25).keys()).map((i) => {
-                return (
-                  <div className={styles.cardContainer} key={i}>
-                    <PersonCardSkeleton key={i} />
-                  </div>
-                );
-              })}
+            ) : (
+              <h2 className={styles.noContacts}>NO CONTACTS</h2>
+            )
+          ) : (
+            Array.from(Array(25).keys()).map((i) => {
+              return (
+                <div className={styles.cardContainer} key={i}>
+                  <PersonCardSkeleton key={i} />
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </>

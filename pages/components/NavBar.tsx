@@ -21,8 +21,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import logo from "../../public/zaptoid.svg";
-import { createPerson } from "../../src/dbFunctions";
-import { User } from "@/src/types";
+import { createPerson} from "../../src/dbFunctions";
 import { notifications } from "@mantine/notifications";
 
 // Styles
@@ -141,24 +140,24 @@ export default function NavBar(props: { active: number }) {
           onClick={() => {
             notifications.show({
               loading: true,
-              message: "Creating new person",
+              message: "Creating new person...",
               autoClose: false,
               withCloseButton: false,
               id: "loading",
               withBorder: true,
             });
 
-            const getNewUser = createPerson(
+            const getNewPerson = createPerson(
               {
                 id: "NA",
                 name: "Zaptoid Person",
-                email: "",
-                phone: [""],
+                email: "newperson@zaptoid.mail",
+                phone: "9999999999",
                 joined: new Date(),
-              } as User,
+              },
               false
             );
-            getNewUser.then((res) => {
+            getNewPerson.then((res) => {
               if (res.status === 200) {
                 res.json().then((data) => {
                   notifications.update({

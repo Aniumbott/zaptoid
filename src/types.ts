@@ -13,6 +13,7 @@ type User = {
   id: string;
   name: string;
   email: string;
+  personId: string;
   phone: string[];
   joined: Date;
 };
