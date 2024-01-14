@@ -146,49 +146,63 @@ export default function NavBar(props: { active: number }) {
           label="Add Person"
           key="Add Person"
           onClick={() => {
-            notifications.show({
-              loading: true,
-              message: "Creating new person...",
-              autoClose: false,
-              withCloseButton: false,
-              id: "loading",
-              withBorder: true,
-            });
+            if (
+              getLocalCurrentUser().persons.filter(
+                (person) =>
+                  person.phone.filter((phone) => phone === "9999999999")
+                    .length > 0
+              ).length === 0
+            ) {
+              notifications.show({
+                loading: true,
+                message: "Creating new person...",
+                autoClose: false,
+                withCloseButton: false,
+                id: "loading",
+                withBorder: true,
+              });
 
-            const getNewPerson = createPerson(
-              {
-                id: "NA",
-                name: "Zaptoid Person",
-                email: "newperson@zaptoid.mail",
-                phone: "9999999999",
-                joined: new Date(),
-              },
-              false
-            );
-            getNewPerson.then((res) => {
-              if (res.status === 200) {
-                res.json().then((data) => {
-                  notifications.update({
-                    id: "loading",
-                    color: "teal",
-                    message: "New person created.",
-                    icon: (
-                      <IconCheck style={{ width: rem(18), height: rem(18) }} />
-                    ),
-                    loading: false,
-                    autoClose: 3000,
-                    withBorder: true,
-                  });
+              const getNewPerson = createPerson(
+                {
+                  id: "NA",
+                  name: "Zaptoid Person",
+                  email: "newperson@zaptoid.mail",
+                  phone: "9999999999",
+                  joined: new Date(),
+                },
+                false
+              );
+              getNewPerson.then((res) => {
+                if (res.status === 200) {
+                  res.json().then((data) => {
+                    notifications.update({
+                      id: "loading",
+                      color: "teal",
+                      message: "New person created.",
+                      icon: (
+                        <IconCheck
+                          style={{ width: rem(18), height: rem(18) }}
+                        />
+                      ),
+                      loading: false,
+                      autoClose: 3000,
+                      withBorder: true,
+                    });
 
-                  const currentUser = getLocalCurrentUser();
-                  updateLocalCurrentUser({
-                    ...currentUser,
-                    persons: [...currentUser.persons, data.dbData],
+                    const currentUser = getLocalCurrentUser();
+                    updateLocalCurrentUser({
+                      ...currentUser,
+                      persons: [...currentUser.persons, data.dbData],
+                    });
+                    router.push(`/person/${data.dbData.id}`);
                   });
-                  router.push(`/person/${data.dbData.id}`);
-                });
-              }
-            });
+                }
+              });
+            } else {
+              alert(
+                "You can only have one perosn with 9999999999 which is concidered as Zaptoid Person, either edit it or delete it."
+              );
+            }
           }}
         />
         <NavbarLink

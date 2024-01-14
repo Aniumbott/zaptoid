@@ -18,3 +18,14 @@ a {
 .scrollbar-hidden::-webkit-scrollbar {
   display: none;
 }
+
+::-moz-selection {
+  /* Code for Firefox */
+  color: white;
+  background: #aa14f0;
+}
+
+::selection {
+  color: white;
+  background: #aa14f0;
+}
