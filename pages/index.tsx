@@ -8,8 +8,11 @@ import { useEffect, useState } from "react";
 import Home from "./home/page";
 import LogIn from "./login/page";
 import { CurrentUser, currentUserDefault } from "@/src/types";
-import getCurrentUser from "../src/getCurrentUser";
 import { getUser, createPerson } from "../src/dbFunctions";
+import {
+  getLocalCurrentUser,
+  syncLocalCurrentUser,
+} from "../src/localStorageFuntions";
 
 // Export Module
 export default function Main() {
@@ -82,17 +85,11 @@ export default function Main() {
   // Now collect his data
   useEffect(() => {
     if (currentUser.id) {
-      getCurrentUser({ currentUser, setCurrentUser }); // Collect user data from db
+      syncLocalCurrentUser(currentUser).then(() => {
+        setCurrentUser(getLocalCurrentUser());
+      });
     }
   }, [currentUser.id]);
-
-  // update local storage
-  useEffect(() => {
-    // console.log("currenUser", currentUser);
-    if (currentUser.id) {
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    }
-  }, [currentUser]);
 
   if (session && session.user) {
     return <Home persons={currentUser.persons} />;

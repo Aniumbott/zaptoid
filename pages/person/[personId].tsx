@@ -21,9 +21,12 @@ import wallpaper from "../../public/profile-bg.svg";
 import SectionLeft from "./SectionLeft";
 import SectionRight from "./SectionRight";
 import NavBar from "../components/NavBar";
-import getCurrentUser from "../../src/getCurrentUser";
 import { updatePerson, updateRelation } from "../../src/dbFunctions";
 import style from "./person.module.css";
+import {
+  getLocalCurrentUser,
+  syncLocalCurrentUser,
+} from "@/src/localStorageFuntions";
 
 // Export Module
 export default function Page() {
@@ -81,7 +84,6 @@ export default function Page() {
   });
 
   // Functions
-
   // To check if the phone number is already present
   function isPhonePresent(phone: String) {
     return (
@@ -172,9 +174,8 @@ export default function Page() {
               updateRelation({ task: "delete", ...relation })
             )
           ).then(() => {
-            getCurrentUser({ currentUser, setCurrentUser }).then(() => {
-              // Update the currentUser state
-              // console.log(currentUser);
+            syncLocalCurrentUser(currentUser).then(() => {
+              setCurrentUser(getLocalCurrentUser());
               setPerson(dbData);
               setEditable(false);
               setUpdating(false);
@@ -191,22 +192,15 @@ export default function Page() {
   }
 
   // Event Handlers
+  // Update the currentUser state
   useEffect(() => {
-    // Update the currentUser state
     if (router.query.personId) {
-      const currentUser = localStorage.getItem("currentUser");
-      if (currentUser) {
-        setCurrentUser(JSON.parse(currentUser));
-      }
+      setCurrentUser(getLocalCurrentUser());
     }
   }, [router.query.personId]);
 
+  // Update the person state
   useEffect(() => {
-    // Update the currentUser in the localStorage
-    if (currentUser.id) {
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    }
-    // Update the person state
     if (router.query.personId) {
       const getPerson = currentUser.persons.filter(
         (p: Person) => p.id == router.query.personId

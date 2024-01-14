@@ -1,6 +1,10 @@
-// Import Modules
 "use client";
+
+// Import Modules
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { notifications } from "@mantine/notifications";
 import {
   Navbar,
   Tooltip,
@@ -17,12 +21,16 @@ import {
   IconCheck,
   // IconBrandGraphql,
 } from "@tabler/icons-react";
-import Image from "next/image";
-import { useRouter } from "next/router";
+
 import { signOut } from "next-auth/react";
+
+// Import Components
 import logo from "../../public/zaptoid.svg";
-import { createPerson} from "../../src/dbFunctions";
-import { notifications } from "@mantine/notifications";
+import { createPerson } from "../../src/dbFunctions";
+import {
+  getLocalCurrentUser,
+  updateLocalCurrentUser,
+} from "../../src/localStorageFuntions";
 
 // Styles
 const useStyles = createStyles((theme) => ({
@@ -171,16 +179,12 @@ export default function NavBar(props: { active: number }) {
                     autoClose: 3000,
                     withBorder: true,
                   });
-                  const currentUser = JSON.parse(
-                    localStorage.getItem("currentUser") || ""
-                  );
-                  localStorage.setItem(
-                    "currentUser",
-                    JSON.stringify({
-                      ...currentUser,
-                      persons: [...currentUser.persons, data.dbData],
-                    })
-                  );
+
+                  const currentUser = getLocalCurrentUser();
+                  updateLocalCurrentUser({
+                    ...currentUser,
+                    persons: [...currentUser.persons, data.dbData],
+                  });
                   router.push(`/person/${data.dbData.id}`);
                 });
               }

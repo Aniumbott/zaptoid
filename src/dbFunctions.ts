@@ -1,3 +1,5 @@
+// Import Components
+import { getLocalCurrentUser } from "./localStorageFuntions";
 import { User } from "./types";
 
 // Function to create a person object of user
@@ -11,10 +13,7 @@ async function createPerson(person: any, isUser: boolean) {
       name: person.name,
       email: [person.email],
       phone: [person.phone],
-      userId:
-        person.userId ||
-        JSON.parse(localStorage.getItem("currentUser") || "{}").id ||
-        "",
+      userId: person.userId || getLocalCurrentUser().id || "",
     }),
   });
   return res;
@@ -106,7 +105,7 @@ async function deletePerson(id: string) {
     body: JSON.stringify({
       action: "deletePerson",
       id: id,
-      userId: JSON.parse(localStorage.getItem("currentUser") || "{}").id || "",
+      userId: getLocalCurrentUser().id || "",
     }),
   });
   return data;

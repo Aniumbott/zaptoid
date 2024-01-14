@@ -1,41 +1,61 @@
-// Importing components
-import { Person, Role, Relation, currentUserDefault } from "./types";
+// Import compoments
 import { getAllPerson, getAllRoles, getAllRelations } from "./dbFunctions";
+import {
+  Person,
+  Role,
+  Relation,
+  CurrentUser,
+  currentUserDefault,
+} from "./types";
 
-// Function to get current user form its id
-export default async function getCurrentUser(props: any) {
-  const { setCurrentUser } = props;
-  const currentUser = props.currentUser || currentUserDefault;
+// To get the current user from local storage
+function getLocalCurrentUser() {
+  const localCurrentUser = localStorage.getItem("currentUser");
+  return localCurrentUser
+    ? (JSON.parse(localCurrentUser) as CurrentUser)
+    : currentUserDefault;
+}
+
+// To update the current user in local storage
+function updateLocalCurrentUser(user: CurrentUser) {
+  localStorage.setItem("currentUser", JSON.stringify(user));
+}
+
+// To clear the current user from local storage
+function clearLocalCurrentUser() {
+  localStorage.removeItem("currentUser");
+}
+
+// To sync the current user from local storage to the database
+async function syncLocalCurrentUser(currentUser: CurrentUser) {
   const getAllPersonRes = getAllPerson(currentUser.id); // Get all persons
   const getAllrolesRes = getAllRoles(currentUser.id); // Get all roles
   const getAllRelationRes = getAllRelations(currentUser.id); // Get all relations
   let persons: Person[] = [];
   let roles: Role[] = [];
   let relations: Relation[] = [];
-
-  // Consecutive API calls
-  await getAllPersonRes.then((res) => {
+  let localCurrentUser = await getAllPersonRes.then((res) => {
     if (res.status === 200) {
-      res
+      return res
         .json()
         .then((data) => {
           persons = data.dbData;
         })
         .then(() => {
-          getAllrolesRes.then((res) => {
+          return getAllrolesRes.then((res) => {
             if (res.status === 200) {
-              res
+              return res
                 .json()
                 .then((data) => {
                   roles = data.dbData;
                 })
                 .then(() => {
-                  getAllRelationRes.then((res) => {
+                  return getAllRelationRes.then((res) => {
                     if (res.status === 200) {
-                      res
+                      return res
                         .json()
                         .then((data) => {
-                          relations = data.dbData?.map((relation: any) => {
+                          relations = data.dbData?.map((relation: Relation) => {
                             return {
                               ...relation,
                               name:
@@ -46,7 +66,7 @@ export default async function getCurrentUser(props: any) {
                           });
                         })
                         .then(() => {
-                          setCurrentUser({
+                          return {
                             ...currentUser,
                             persons: persons.sort((a, b) =>
                               a.name.localeCompare(b.name)
@@ -64,7 +84,7 @@ export default async function getCurrentUser(props: any) {
                                     )?.name || ""
                                   ) || 0
                             ),
-                          });
+                          };
                         });
                     }
                   });
@@ -74,4 +94,18 @@ export default async function getCurrentUser(props: any) {
         });
     }
   });
+
+  // Sync the current user in local storage
+  localStorage.setItem("currentUser", JSON.stringify(localCurrentUser));
+  return {
+    status: 200,
+    msg: "Synced",
+  };
 }
+
+export {
+  getLocalCurrentUser,
+  updateLocalCurrentUser,
+  clearLocalCurrentUser,
+  syncLocalCurrentUser,
+};
